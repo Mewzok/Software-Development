@@ -56,7 +56,7 @@ public class PresidentQuiz {
         String gamemodeY = "years served";
         String gamemodeN = "president number";
         String currentGamemode = "";
-        String[] highscores = new String[5];
+        String[] highscores = new String[4];
 
         String filePath = "config.properties";
         File file = new File(filePath);
@@ -66,16 +66,16 @@ public class PresidentQuiz {
             manageProperties();
         }
 
-        // load properties from file
-        Properties p = loadProperties(file);
-
-        // set starting current gamemode in program
-        currentGamemode = p.getProperty("gamemode");
-
-        // grab current high scores in program
-        highscores = assignHighscores(p, currentGamemode);
-
         while (mainMenuChoice != 5) {
+            // load properties from file
+            Properties p = loadProperties(file);
+
+            // set starting current gamemode in program
+            currentGamemode = p.getProperty("gamemode");
+
+            // grab current high scores in program
+            highscores = assignHighscores(p, currentGamemode);
+
             System.out.println("Current gamemode: " + currentGamemode);
             // display main menu and return user input
             mainMenuChoice = displayMainMenu();
@@ -88,8 +88,6 @@ public class PresidentQuiz {
                 currentGamemode = changeMode(currentGamemode, gamemodeY, gamemodeN);
 
                 saveNewProperties("gamemode", currentGamemode);
-                loadProperties(file);
-                assignHighscores(p, currentGamemode);
             }
 
             if (mainMenuChoice == 3) {
@@ -211,6 +209,9 @@ public class PresidentQuiz {
         }
 
         System.out.println("score: " + score);
+
+        // testing
+        System.out.println(Arrays.toString(hiScores));
 
         // display final score, save high score
         finalScore(score, quizLength, difficulty, difficultyString, hiScores, gameMode);
@@ -496,11 +497,18 @@ public class PresidentQuiz {
                 : "numberhighscore" + difficultyName;
         String scorePercent = String.format("%.2f%%", (finalScoreNum / totalScore) * 100);
 
+        // testing
+        System.out.println("key name: " + keyName);
+
         // print final score
         System.out.println("Final score: " + df.format(finalScoreNum) + "/" + totalScore + " - " + scorePercent);
 
         // save new high score
         if (!difficultyName.equals("custom")) {
+
+            // testing
+            System.out.println("hiscore string: " + hiscoreStrings[diff - 1]);
+
             if (finalScoreNum > Double.parseDouble(hiscoreStrings[diff - 1])) {
                 System.out.println("New high score");
                 saveNewProperties(keyName, String.valueOf(finalScoreNum));
