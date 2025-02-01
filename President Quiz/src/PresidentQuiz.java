@@ -273,25 +273,34 @@ public class PresidentQuiz {
                 }
             }
 
+            // add to score for correct dates
             if (correctAnswers > 0) {
                 scre += (double) correctAnswers / (double) correctDates.length;
-                scre -= (double) incorrectDates / (double) correctDates.length;
+            }
 
-                System.out.println("first score: " + scre);
+            // subtract from score if user inputted extra dates
+            if (userDates.length > correctDates.length) {
+                scre -= (userDates.length - (double) correctDates.length) / (double) correctDates.length;
 
-                if (correctAnswers == correctDates.length && userDates.length == correctDates.length) {
-                    System.out.println("Correct.");
-                } else if (correctAnswers < correctDates.length && incorrectDates == 0) {
-                    System.out.println(
-                            "Partially correct. Partial point awarded. The correct answer is " + rndmPres[i][2]);
-                } else if ((correctAnswers < correctDates.length
-                        || correctAnswers > correctDates.length) && incorrectDates > 0) {
-                    System.out.println(
-                            "Partially correct. Partial point awarded. The correct answer is " + rndmPres[i][2]);
-                    System.out.println("Incorrect date also entered. Points deducted.");
-                }
-            } else {
+                // testing
+                System.out.println("incorrect dates: " + incorrectDates);
+                System.out.println("scre neg: " + scre);
+            }
+
+            System.out.println("first score: " + scre);
+
+            if (correctAnswers == correctDates.length && userDates.length == correctDates.length) { // check for exact
+                                                                                                    // correct answers
+                System.out.println("Correct.");
+            } else if (correctAnswers > 0) { // check for at least one correct answer but not spamming numbers to cheat
+                System.out.println(
+                        "Partially correct. Partial point awarded. The correct answer is " + rndmPres[i][2]);
+            } else { // blanket incorrect statement
                 System.out.println("Incorrect. The correct answer is " + rndmPres[i][2]);
+            }
+
+            if (userDates.length > correctDates.length) { // check if user spamming dates to cheat and deduct points
+                System.out.println("Additional date entered. Points deducted.");
             }
 
             incorrectDates = 0;
@@ -299,6 +308,7 @@ public class PresidentQuiz {
         }
 
         return scre;
+
     }
 
     public static double numberQuiz(int qzLength, String[][] rndmPres, double scre) {
@@ -335,25 +345,31 @@ public class PresidentQuiz {
                 }
             }
 
+            // add to score for correct numbers
             if (correctAnswers > 0) {
                 scre += (double) correctAnswers / (double) correctNumbers.length;
+            }
+
+            // subtract from score if user inputted extra numbers
+            if (userNumbers.length > correctNumbers.length) {
                 scre -= (double) incorrectNumbers / (double) correctNumbers.length;
+            }
 
-                System.out.println("first score: " + scre);
-
-                if (correctAnswers == correctNumbers.length && userNumbers.length == correctNumbers.length) {
-                    System.out.println("Correct.");
-                } else if (correctAnswers < correctNumbers.length && incorrectNumbers == 0) {
-                    System.out.println(
-                            "Partially correct. Partial point awarded. The correct answer is " + rndmPres[i][2]);
-                } else if ((correctAnswers < correctNumbers.length
-                        || correctAnswers > correctNumbers.length) && incorrectNumbers > 0) {
-                    System.out.println(
-                            "Partially correct. Partial point awarded. The correct answer is " + rndmPres[i][2]);
-                    System.out.println("Incorrect date also entered. Points deducted.");
-                }
-            } else {
+            if (correctAnswers == correctNumbers.length && userNumbers.length == correctNumbers.length) { // check for
+                                                                                                          // exact
+                                                                                                          // correct
+                                                                                                          // answers
+                System.out.println("Correct.");
+            } else if (correctAnswers > 0) { // check for at least one correct answer but not spamming numbers to cheat
+                System.out.println(
+                        "Partially correct. Partial point awarded. The correct answer is " + rndmPres[i][0]);
+            } else { // blanket incorrect statement
                 System.out.println("Incorrect. The correct answer is " + rndmPres[i][0]);
+            }
+
+            if (userNumbers.length > correctNumbers.length) { // check if user spamming numbers to cheat and deduct
+                                                              // points
+                System.out.println("Additional number entered. Points deducted.");
             }
 
             incorrectNumbers = 0;
@@ -361,6 +377,7 @@ public class PresidentQuiz {
         }
 
         return scre;
+
     }
 
     public static String changeMode(String gameMode, String gm1, String gm2) {
