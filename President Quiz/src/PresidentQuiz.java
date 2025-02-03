@@ -210,9 +210,6 @@ public class PresidentQuiz {
 
         System.out.println("score: " + score);
 
-        // testing
-        System.out.println(Arrays.toString(hiScores));
-
         // display final score, save high score
         finalScore(score, quizLength, difficulty, difficultyString, hiScores, gameMode);
     }
@@ -282,10 +279,6 @@ public class PresidentQuiz {
             // subtract from score if user inputted extra dates
             if (userDates.length > correctDates.length) {
                 scre -= (userDates.length - (double) correctDates.length) / (double) correctDates.length;
-
-                // testing
-                System.out.println("incorrect dates: " + incorrectDates);
-                System.out.println("scre neg: " + scre);
             }
 
             System.out.println("first score: " + scre);
@@ -482,10 +475,6 @@ public class PresidentQuiz {
             randomPres[j] = temp;
         }
 
-        // testing
-        randomPres[0] = pres[0];
-        randomPres[1] = pres[43];
-
         return randomPres;
     }
 
@@ -497,17 +486,11 @@ public class PresidentQuiz {
                 : "numberhighscore" + difficultyName;
         String scorePercent = String.format("%.2f%%", (finalScoreNum / totalScore) * 100);
 
-        // testing
-        System.out.println("key name: " + keyName);
-
         // print final score
         System.out.println("Final score: " + df.format(finalScoreNum) + "/" + totalScore + " - " + scorePercent);
 
         // save new high score
         if (!difficultyName.equals("custom")) {
-
-            // testing
-            System.out.println("hiscore string: " + hiscoreStrings[diff - 1]);
 
             if (finalScoreNum > Double.parseDouble(hiscoreStrings[diff - 1])) {
                 System.out.println("New high score");
@@ -573,7 +556,7 @@ public class PresidentQuiz {
     }
 
     public static String[] assignHighscores(Properties props, String gameMode) {
-        String[] highscores = new String[5];
+        String[] highscores = new String[4];
 
         if (gameMode.equals("years served")) {
             highscores[0] = props.getProperty("highscoreeasy");
@@ -614,7 +597,7 @@ public class PresidentQuiz {
                 e.printStackTrace();
             }
         } else if (userInput == 'N' || userInput == 'n') {
-            System.out.println("High scores not deleted. Returning to options menu.\n");
+            System.out.println("Returning to options menu.\n");
             displayOptions(props);
         } else {
             System.out.println("Invalid input. Returning to options menu.\n");
