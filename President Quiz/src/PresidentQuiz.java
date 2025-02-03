@@ -208,8 +208,6 @@ public class PresidentQuiz {
             score = numberQuiz(quizLength, randomPres, score);
         }
 
-        System.out.println("score: " + score);
-
         // display final score, save high score
         finalScore(score, quizLength, difficulty, difficultyString, hiScores, gameMode);
     }
@@ -229,9 +227,7 @@ public class PresidentQuiz {
 
     public static double yearsQuiz(int qzLength, String[][] rndmPres, double scre) {
         String userAnswer = "";
-        boolean found = false;
         int correctAnswers = 0;
-        int incorrectDates = 0;
 
         Scanner in = new Scanner(System.in);
 
@@ -240,12 +236,25 @@ public class PresidentQuiz {
             System.out.println((i + 1) + ". " + rndmPres[i][1] + ", " + rndmPres[i][3]);
             userAnswer = in.nextLine();
 
+            // split correct dates into individual strings
             String[] correctDateRanges = rndmPres[i][2].split(", | "); // split by comma for non-consecutive
 
+            // split user dates into individual strings
             String[] userDates = userAnswer.split("-| ");
 
+            // create correct dates array
             String[] correctDates = new String[0];
 
+            // account for single date presidents being entered twice
+            if(correctDateRanges.length == 1 && userDates.length == 2) {
+                if(userDates[0].equals(userDates[1])) {
+                    String tempString = userDates[0];
+                    userDates = new String[1];
+                    userDates[0] = tempString;
+                }
+            }
+
+            // split date ranges into individual dates
             for (String correctDateRange : correctDateRanges) {
                 String[] rangeDates = correctDateRange.split("-");
                 correctDates = Arrays.copyOf(correctDates, correctDates.length + rangeDates.length);
@@ -253,21 +262,12 @@ public class PresidentQuiz {
                         rangeDates.length);
             }
 
-            System.out.println(Arrays.toString(correctDates));
-
+            // check if user dates are correct anywhere
             for (String userDate : userDates) {
-                found = false;
                 for (String correctDate : correctDates) {
                     if (userDate.equals(correctDate)) {
                         correctAnswers++;
-                        found = true;
-
-                        System.out.println(correctAnswers);
                     }
-                }
-                if (!found) {
-                    incorrectDates++;
-                    System.out.println(incorrectDates);
                 }
             }
 
@@ -280,8 +280,6 @@ public class PresidentQuiz {
             if (userDates.length > correctDates.length) {
                 scre -= (userDates.length - (double) correctDates.length) / (double) correctDates.length;
             }
-
-            System.out.println("first score: " + scre);
 
             if (correctAnswers == correctDates.length && userDates.length == correctDates.length) { // check for exact
                                                                                                     // correct answers
@@ -297,7 +295,6 @@ public class PresidentQuiz {
                 System.out.println("Additional date entered. Points deducted.");
             }
 
-            incorrectDates = 0;
             correctAnswers = 0;
         }
 
@@ -307,9 +304,7 @@ public class PresidentQuiz {
 
     public static double numberQuiz(int qzLength, String[][] rndmPres, double scre) {
         String userAnswer = "";
-        boolean found = false;
         int correctAnswers = 0;
-        int incorrectNumbers = 0;
 
         Scanner in = new Scanner(System.in);
 
@@ -318,24 +313,21 @@ public class PresidentQuiz {
             System.out.println((i + 1) + ". " + rndmPres[i][1] + ", " + rndmPres[i][3]);
             userAnswer = in.nextLine();
 
+            // account for preceding zeroes
             while (userAnswer.startsWith("0")) {
                 userAnswer = userAnswer.substring(1);
             }
 
             String[] correctNumbers = rndmPres[i][0].split(", | "); // split by comma for non-consecutive
 
-            String[] userNumbers = userAnswer.split("-|, | ");
+            String[] userNumbers = userAnswer.split("-|, | "); // split user numbers for non-consecutive
 
+            // determine correct numbers anywhere
             for (String userNum : userNumbers) {
-                found = false;
                 for (String correctNum : correctNumbers) {
                     if (userNum.equals(correctNum)) {
                         correctAnswers++;
-                        found = true;
                     }
-                }
-                if (!found) {
-                    incorrectNumbers++;
                 }
             }
 
@@ -346,7 +338,7 @@ public class PresidentQuiz {
 
             // subtract from score if user inputted extra numbers
             if (userNumbers.length > correctNumbers.length) {
-                scre -= (double) incorrectNumbers / (double) correctNumbers.length;
+                scre -= (userNumbers.length - (double) correctNumbers.length) / (double) correctNumbers.length;
             }
 
             if (correctAnswers == correctNumbers.length && userNumbers.length == correctNumbers.length) { // check for
@@ -366,7 +358,6 @@ public class PresidentQuiz {
                 System.out.println("Additional number entered. Points deducted.");
             }
 
-            incorrectNumbers = 0;
             correctAnswers = 0;
         }
 
@@ -379,12 +370,14 @@ public class PresidentQuiz {
 
         Scanner input = new Scanner(System.in);
 
+        // display instructions and recieve user input
         while (true) {
             if (gameMode.equals(gm1)) {
                 System.out.println("Current game mode is years served.");
                 System.out.println("Change to " + gm2 + "? (Y/N)");
                 userString = input.nextLine();
 
+                // change gamemode if already gamemode1
                 if (Character.toLowerCase((userString.charAt(0))) == 'y') {
                     gameMode = gm2;
                     System.out.println("\n-Gamemode set to " + gameMode);
@@ -395,6 +388,7 @@ public class PresidentQuiz {
                 System.out.println("Change to " + gm1 + "? (Y/N)");
                 userString = input.nextLine();
 
+                // change gamemode if already gamemode2
                 if (Character.toLowerCase((userString.charAt(0))) == 'y') {
                     gameMode = gm1;
                     System.out.println("\n-Gamemode set to " + gameMode);
@@ -402,6 +396,7 @@ public class PresidentQuiz {
                 }
             }
 
+            // leave loop if no
             if (Character.toLowerCase((userString.charAt(0))) == 'n') {
                 break;
             }
@@ -435,6 +430,7 @@ public class PresidentQuiz {
         System.out.println("Hard: " + df.format(Double.parseDouble(p.getProperty("numberhighscorehard"))) + "/25");
         System.out.println("All: " + df.format(Double.parseDouble(p.getProperty("numberhighscoreall"))) + "/45");
 
+        // allow user to read before continuing
         System.out.println("Press Enter key to continue...");
         in.nextLine();
     }
@@ -443,12 +439,14 @@ public class PresidentQuiz {
         int userInput = -1;
         Scanner in = new Scanner(System.in);
 
+        // display options and recieve user input
         while (userInput == -1) {
             System.out.println("\nOptions: ");
             System.out.println("1) Delete High Scores");
             System.out.println("2) Back to Main Menu");
             userInput = in.nextInt();
 
+            // delete high scores method called
             if (userInput == 1) {
                 deleteHighscores(props);
             }
@@ -483,8 +481,8 @@ public class PresidentQuiz {
         Scanner in = new Scanner(System.in);
         DecimalFormat df = new DecimalFormat("##.##");
         String keyName = gameMode.equals("years served") ? "highscore" + difficultyName
-                : "numberhighscore" + difficultyName;
-        String scorePercent = String.format("%.2f%%", (finalScoreNum / totalScore) * 100);
+                : "numberhighscore" + difficultyName; // determine and create key name
+        String scorePercent = String.format("%.2f%%", (finalScoreNum / totalScore) * 100); // format score percent
 
         // print final score
         System.out.println("Final score: " + df.format(finalScoreNum) + "/" + totalScore + " - " + scorePercent);
@@ -506,6 +504,7 @@ public class PresidentQuiz {
         String filePath = "config.properties";
         Properties p = new Properties();
 
+        // set all default properties if no file exists yet
         p.setProperty("gamemode", "years served");
         p.setProperty("highscoreeasy", "0");
         p.setProperty("highscoremedium", "0");
@@ -516,6 +515,7 @@ public class PresidentQuiz {
         p.setProperty("numberhighscorehard", "0");
         p.setProperty("numberhighscoreall", "0");
 
+        // store properties in file to save
         try (FileOutputStream output = new FileOutputStream(filePath)) {
             p.store(output, "Default properties");
         } catch (IOException e) {
@@ -540,6 +540,7 @@ public class PresidentQuiz {
         String filePath = "config.properties";
         Properties p = new Properties();
 
+        // set properties in given key with given value
         try (FileInputStream in = new FileInputStream(filePath)) {
             p.load(in);
 
@@ -558,6 +559,7 @@ public class PresidentQuiz {
     public static String[] assignHighscores(Properties props, String gameMode) {
         String[] highscores = new String[4];
 
+        // set high scores in program from saved file
         if (gameMode.equals("years served")) {
             highscores[0] = props.getProperty("highscoreeasy");
             highscores[1] = props.getProperty("highscoremedium");
@@ -580,6 +582,7 @@ public class PresidentQuiz {
         System.out.println("Are you sure you want to delete high scores? (Y/N)"); // confirm deletion of high scores
         userInput = in.nextLine().charAt(0);
 
+        // set all high scores to zero in file
         if (userInput == 'Y' || userInput == 'y') {
             props.setProperty("highscoreeasy", "0");
             props.setProperty("highscoremedium", "0");
@@ -590,16 +593,17 @@ public class PresidentQuiz {
             props.setProperty("numberhighscorehard", "0");
             props.setProperty("numberhighscoreall", "0");
 
+            // save zeroed high scores in file
             try (FileOutputStream output = new FileOutputStream("config.properties")) {
                 props.store(output, "Updated high score");
                 System.out.println("High scores deleted successfully.\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (userInput == 'N' || userInput == 'n') {
+        } else if (userInput == 'N' || userInput == 'n') { // cancel operation
             System.out.println("Returning to options menu.\n");
             displayOptions(props);
-        } else {
+        } else { // cancel operation if invalid input, return to options menu for safety
             System.out.println("Invalid input. Returning to options menu.\n");
             displayOptions(props);
         }
