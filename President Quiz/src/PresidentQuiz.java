@@ -57,7 +57,6 @@ public class PresidentQuiz {
         String gamemodeN = "president number";
         String currentGamemode = "";
         String[] highscores = new String[4];
-
         String filePath = "config.properties";
         File file = new File(filePath);
 
@@ -180,6 +179,7 @@ public class PresidentQuiz {
                 difficultyString = "custom";
                 break;
             case 6:
+                System.out.println();
                 return;
             default:
                 System.out.println("Invalid input.");
