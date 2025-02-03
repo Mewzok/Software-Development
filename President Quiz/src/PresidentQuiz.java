@@ -450,6 +450,8 @@ public class PresidentQuiz {
             if (userInput == 1) {
                 deleteHighscores(props);
             }
+
+            System.out.println();
         }
     }
 
