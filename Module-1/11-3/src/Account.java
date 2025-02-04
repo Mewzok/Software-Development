@@ -75,10 +75,4 @@ public class Account {
     public Date getDate() {
         return dateCreated;
     }
-
-    @Override
-    public String toString() {
-        return String.format("ID: %\nBalance: $%.2f\nAnnual Interest Rate: %%/nDate created: %",
-         id, balance, annualInterestRate, dateCreated);
-    }
 }
