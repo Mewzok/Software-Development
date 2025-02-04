@@ -1,18 +1,40 @@
-## Getting Started
+UML
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Account
+-id: int
+-balance: double
+-annualInterestRate: double
+-dateCreated: java.util.Date
+----------------------------
++Account()
++Account(id: int, balance: double)
++Account(id: int, balance: double, annualInterestRate: date, dateCreated: java.util.Date)
++getId(): int
++setId(id: int): void
++getBalance(): double
++setBalance(balance: double): void
++getAnnualInterestRate(): double
++setAnnualInterestRate(annualInterestRate: double): void
++getMonthlyInterestRate(): double
++getMonthlyInterest(): double
++widthdraw(amount: double): void
++deposit(amount: double): void
++getDate(): java.util.Date
++toString(): String
 
-## Folder Structure
 
-The workspace contains two folders by default, where:
+CheckingAccount
+-overdraftLimit: double
+------------------------
++CheckingAccount()
++CheckingAccount(id: int, balance: double, annualInterestRate: double, overdraftLimit: double)
++getOverdraftLimit(): double
++setOverdraftLimit(overdraftLimit: double): void
++toString(): String
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+SavingsAccount
++SavingsAccount()
++SavingsAccount(id: int, balance: double, annualInterestRate: double)
++withdraw(amount: double): void
++toString(): String

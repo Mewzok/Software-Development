@@ -1,11 +1,13 @@
 import java.util.Date;
 
 public class Account {
+    // declare variables
     private int id;
     private double balance;
     private double annualInterestRate;
     private Date dateCreated;
 
+    // constructors
     Account() {
         this(0, 0, 0);
     }
@@ -74,5 +76,11 @@ public class Account {
     // date
     public Date getDate() {
         return dateCreated;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d\nBalance: $%.2f\nAnnual Interest Rate: %.1f%%\nDate created: %s\n",
+         id, balance, annualInterestRate, dateCreated);
     }
 }
