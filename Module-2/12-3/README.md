@@ -1,0 +1,1 @@
+The error should be triggered when an invalid index is accessed from the array, such as when attempting to display the number contained in the specified index with an invalid index number. To specifically throw an ArrayIndexOutOfBoundsException, the program must simply check for the exception when the index is being accessed.
