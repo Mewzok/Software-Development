@@ -1,0 +1,1 @@
+The program will utilize the PrintWriter class to write the contents of an array list to the file. It will use the Scanner class on loop to read all the data from the file and assign each value to an array list.
