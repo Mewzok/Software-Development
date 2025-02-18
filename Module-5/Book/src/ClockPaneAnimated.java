@@ -6,18 +6,18 @@ import javafx.scene.text.Text;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class ClockPane extends Pane {
+public class ClockPaneAnimated extends Pane {
     private int hour;
     private int minute;
     private int second;
 
     // construct default clock with the current time
-    public ClockPane() {
+    public ClockPaneAnimated() {
         setCurrentTime();
     }
 
     // construct clock with specified hour, minute and second
-    public ClockPane(int hour, int minute, int second) {
+    public ClockPaneAnimated(int hour, int minute, int second) {
         this.hour = hour;
         this.minute = minute;
         this.second = second;
