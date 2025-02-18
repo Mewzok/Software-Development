@@ -7,16 +7,17 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class Exercise15_Listeners extends Application {
+    // create panes and buttons
+    BorderPane borderPane = new BorderPane();
+    BallPane ballPane = new BallPane();
+    Button btLeft = new Button("Left");
+    Button btRight = new Button("Right");
+    Button btUp = new Button("Up");
+    Button btDown = new Button("Down");
+    HBox hBox = new HBox(5, btLeft, btRight, btUp, btDown);
+
     @Override
     public void start(Stage primaryStage) {
-        // create panes and buttons
-        BorderPane borderPane = new BorderPane();
-        BallPane ballPane = new BallPane();
-        Button btLeft = new Button("Left");
-        Button btRight = new Button("Right");
-        Button btUp = new Button("Up");
-        Button btDown = new Button("Down");
-        HBox hBox = new HBox(5, btLeft, btRight, btUp, btDown);
         hBox.setAlignment(Pos.CENTER);
 
         borderPane.setCenter(ballPane);
@@ -40,16 +41,19 @@ public class Exercise15_Listeners extends Application {
         });
 
         // listener to prevent ball from going offscreen if window is resized
-        borderPane.widthProperty().addListener(ov -> ballPane.resize());
+        ballPane.widthProperty().addListener(ov -> ballPane.resize());
+        ballPane.heightProperty().addListener(ov -> ballPane.resize());
 
         // create scene and place in stage
-        Scene scene = new Scene(borderPane, 200, 150);
+        Scene scene = new Scene(borderPane, 200, 200);
+        primaryStage.setMinWidth(125);
+        primaryStage.setMinHeight(125);
         primaryStage.setTitle("Exercise15_Listeners");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(args);
     }
 }

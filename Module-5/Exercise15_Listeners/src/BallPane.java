@@ -9,16 +9,16 @@ public class BallPane extends Pane {
     private Circle circle = new Circle(x, y, radius);
 
     public BallPane() {
-            circle.setStroke(Color.BLACK);
-            circle.setFill(Color.WHITE);
-            getChildren().add(circle);
-        }
+        circle.setStroke(Color.BLACK);
+        circle.setFill(Color.WHITE);
+        getChildren().add(circle);
+    }
 
     protected void moveLeft() {
         if((circle.getCenterX() - radius) > 0) {
             circle.setCenterX(circle.getCenterX() - moveIncrement);
             if(circle.getCenterX() - radius < 0) {
-                circle.setCenterX(0 + radius);
+                circle.setCenterX(radius);
             }
         }
     }
@@ -52,10 +52,19 @@ public class BallPane extends Pane {
 
     protected void resize() {
         if(circle.getCenterX() - radius < 0) {
-            circle.setCenterX(0 + radius);
+            circle.setCenterX(radius);
         }
+
         if(circle.getCenterX() + radius > this.getWidth()) {
             circle.setCenterX(this.getWidth() - radius);
+        }
+
+        if(circle.getCenterY() - radius < 0) {
+            circle.setCenterY(radius);
+        }
+
+        if(circle.getCenterY() + radius > this.getHeight()) {
+            circle.setCenterY(this.getHeight() - radius);
         }
     }
 }

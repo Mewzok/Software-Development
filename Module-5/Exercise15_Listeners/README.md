@@ -1,18 +1,3 @@
-## Getting Started
-
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
-
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+1. The program will need a circle object, four buttons and a few panes depending on the choice of implementation.
+2. Listeners registered to the width and height of the pane the ball is contained in can be used to prevent the ball from leaving its container. Listeners aren't technically needed for this project outside of resizing issues as the ball's movement is controlled with buttons and its containment can be controlled from there.
+3. The program will consistently check its center x and center y coordinates whenever a button is pressed or the window is resized. If its center x or y combined with its radius is greater than or less than the bounds if its pane it must be "moved" back within its borders.
