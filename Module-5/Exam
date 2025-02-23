@@ -1,0 +1,21 @@
+Which of the following statements correctly sets the fill color of circle to black?
+-  circle.setFill(Color.black); 
+X  circle.setStyle("-fx-fill: black");
+X  circle.setStyle("fill: black");
+X  circle.setStyle("-fx-fill-color: black");
+X  circle.setFill(Color.BLACK); 
+0 / 1
+
+Which of the following statements correctly creates an ImageView object?
+x  new ImageView(new Image("http://www.cs.armstrong.edu/liang/image/us.gif"));
+-  new ImageView("http://www.cs.armstrong.edu/liang/image/us.gif");
+x  new ImageView(new Image("image/us.gif"));
+-  new ImageView("image/us.gif");
+0.5 / 1
+
+Which of the following code correctly registers a handler with a button btOK?
+x  btOK.setOnAction(e -> System.out.println("Handle the event"));
+x  btOK.setOnAction((ActionEvent e) -> System.out.println("Handle the event"));
+x  btOK.setOnAction(e -> {System.out.println("Handle the event");});
+-  btOK.setOnAction((e) -> System.out.println("Handle the event"););
+0.75 / 1
