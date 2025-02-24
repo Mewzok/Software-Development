@@ -1,0 +1,4 @@
+1. To make this display, the program could use a TextField and any pane to hold it.
+2. An event handler (setOnAction) must be used to handle the user's input upon pressing the enter key. Another listener could be used to handle an animation for reducing the countdown using Timeline and KeyFrame.
+3. The program will countdown the timer by using the Timeline and KeyFrame classes, creating a JavaFX animation that reduces the value inside the TextField every second by 1. The TextField should be made uneditable before the countdown begins, preventing user modification during the countdown.
+4. Music will be played through the use of the Media and MediaPlayer classes. It will be played upon the countdown reaching zero and will be set to cycle indefinitely so the music plays continuously.
