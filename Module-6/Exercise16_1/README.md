@@ -1,0 +1,4 @@
+1. The graphical objects needed for this display will be buttons to move the text left and right, radio buttons to change the color of the text and the text itself. The program will also need panes to hold these objects, and thus could use an HBox for the buttons, an HBox for the radio buttons and a Pane for the text.
+2. The buttons to move the text and the buttons to change the text's color will require setOnAction event listeners to handle the button presses.
+3. The left and right buttons fire their own action events, so no further checking is required. The radio buttons will also fire their own action events, but the isSelected method will be used to set the colors based on which radio button is currently selected to ensure the color is only changed when a new color is specifically selected.
+4. The program will change the color of the text by using the setFill method on the previously created text object.
