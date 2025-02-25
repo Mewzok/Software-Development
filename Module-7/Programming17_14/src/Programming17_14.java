@@ -1,6 +1,7 @@
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,51 +13,67 @@ public class Programming17_14 {
         // declare variables
         Scanner in = new Scanner(System.in);
 
-        System.out.print("Enter file name: ");
-        String userInput = in.nextLine();
+        // get valid source file
+        File file = getValidFile(in, "Enter source file name: ", true);
 
-        // create File object with user input
-        File file = new File(userInput);
-
-        // ensure source file exists
-        while(!file.exists()) {
-            System.out.print("File not found. Enter file name: ");
-            userInput = in.nextLine();
-            file = new File(userInput);
-        }
-
-        // create new output file
-        System.out.print("Enter new file name: ");
-        userInput = in.nextLine();
-
-        // create second File object with user input
-        File file2 = new File(userInput);
-
-        // ensure output file doesn't exit
-        while(file.exists()) {
-            System.out.print("File already exists. Enter file name: ");
-            userInput = in.nextLine();
-            file2 = new File(userInput);
-        }
+        // get valid destination file
+        File file2 = getValidFile(in, "Enter new file name: ", false);
 
         // copy old file to new file
-        copyFile();
+        copyFile(file, file2);
 
-        try(RandomAccessFile raf = new RandomAccessFile(file, "rw")) {
+        // place number 5 after every 4th number in copied output file
+        modifyFile(file2);
 
-            for(int i = 1; i < raf.length(); i++) {
-                raf.seek(i * 4);
-                raf.writeInt(5);
+        // inform user of successful operation
+        System.out.println("Operation completed successfully.");
+    }
+
+    private static File getValidFile(Scanner in, String message, boolean mustExist) {
+        File file;
+        while(true) {
+            System.out.print(message);
+            file = new File(in.nextLine());
+            if(mustExist && file.exists()) break;
+            if(!mustExist && !file.exists()) break;
+            System.out.println("Invalid input.");
+        }
+        return file;
+    }
+
+    // copy file method
+    private static void copyFile(File fileSource, File fileTarget) {
+        try(BufferedInputStream input = new BufferedInputStream(new FileInputStream(fileSource));
+        BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(fileTarget));) {
+            // continuously read a byte from input and write it to output
+            int r = 0;
+            while((r = input.read()) != -1) {
+                output.write((byte)r);
             }
+        } catch(FileNotFoundException e) {
+            System.out.println("File not found.");
+            e.printStackTrace();
+        } catch(IOException e) {
+            System.out.println("An error occured.");
+            e.printStackTrace();
+        }
+    }
 
+    // modify file by adding 5 to every byte
+    private static void modifyFile(File fileTarget) {
+        try(RandomAccessFile raf = new RandomAccessFile(fileTarget, "rw")) {
+            long originLength = raf.length();
+
+            for(long i = 0; i < originLength; i++) {
+                raf.seek(i);
+                int originalByte = raf.read();
+                raf.seek(i);
+                raf.write(originalByte + 5);
+            }
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         } catch(IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void copyFile() {
-        
     }
 }
