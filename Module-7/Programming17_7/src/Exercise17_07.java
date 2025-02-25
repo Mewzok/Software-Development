@@ -29,7 +29,7 @@ public class Exercise17_07 {
         outputData();
     }
 
-    public static void outputData() {
+    private static void outputData() {
         // declare variables
         int increment = 1;
 
