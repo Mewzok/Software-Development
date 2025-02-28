@@ -1,9 +1,13 @@
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class Invoice {
+public class Invoice implements Serializable {
     private String rkNumber;
     private String otbNumber;
+    private Broker broker;
+    private Shipper shipper;
+    private Receiver receiver;
     private BigDecimal gross;
     private Date pickupDate;
     private Date deliveryDate;
@@ -14,27 +18,16 @@ public class Invoice {
     private BigDecimal otbCost;
     private BigDecimal net;
 
-    // no arg constructor
-    public Invoice() {
-        this.rkNumber = "";
-        this.otbNumber = "";
-        this.gross = BigDecimal.ZERO;
-        this.pickupDate = null;
-        this.deliveryDate = null;
-        this.factorCost = BigDecimal.ZERO;
-        this.factorDate = null;
-        this.factorDueDate = null;
-        this.dispatchCost = BigDecimal.ZERO;
-        this.otbCost = BigDecimal.ZERO;
-        this.net = BigDecimal.ZERO;
-    }
-
     // all arg constructor
-    public Invoice(String rkNumber, String otbNumber, BigDecimal gross, Date pickupDate, Date deliveryDate,
-                   BigDecimal factorCost, Date factorDate, Date factorDueDate, BigDecimal dispatchCost,
-                   BigDecimal otbCost, BigDecimal net) {
+    public Invoice(String rkNumber, String otbNumber, Broker broker, Shipper shipper, Receiver receiver,
+            BigDecimal gross, Date pickupDate, Date deliveryDate, BigDecimal factorCost, Date factorDate,
+            Date factorDueDate, BigDecimal dispatchCost,
+            BigDecimal otbCost, BigDecimal net) {
         this.rkNumber = rkNumber;
         this.otbNumber = otbNumber;
+        this.broker = broker;
+        this.shipper = shipper;
+        this.receiver = receiver;
         this.gross = gross;
         this.pickupDate = pickupDate;
         this.deliveryDate = deliveryDate;
@@ -53,6 +46,18 @@ public class Invoice {
 
     public String getOtbNumber() {
         return otbNumber;
+    }
+
+    public Broker getBroker() {
+        return broker;
+    }
+
+    public Shipper getShipper() {
+        return shipper;
+    }
+
+    public Receiver getReceiver() {
+        return receiver;
     }
 
     public BigDecimal getGross() {
@@ -98,6 +103,18 @@ public class Invoice {
 
     public void setOtbNumber(String otbNumber) {
         this.otbNumber = otbNumber;
+    }
+
+    public void setBroker(Broker broker) {
+        this.broker = broker;
+    }
+
+    public void setShipper(Shipper shipper) {
+        this.shipper = shipper;
+    }
+
+    public void setReceiver(Receiver receiver) {
+        this.receiver = receiver;
     }
 
     public void setGross(BigDecimal gross) {
