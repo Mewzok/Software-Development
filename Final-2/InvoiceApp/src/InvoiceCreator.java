@@ -1,19 +1,15 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 public class InvoiceCreator extends Pane {
     // declare variables
+    Invoice invoice = new Invoice();
     private final Label rkNumberLabel = new Label("RK#: ");
     private final Label otbNumberLabel = new Label("OTB#: ");
     private final Label brokerCompanyNameLabel = new Label("Broker Company Name: ");
@@ -83,7 +79,6 @@ public class InvoiceCreator extends Pane {
     private TextField otbCostTF = new TextField();
     private TextField netTF = new TextField();
     private Button confirmButton = new Button("Confirm");
-    private boolean allowConfirm = true;
 
     // create default InvoiceCreator window
     public InvoiceCreator() {
@@ -199,13 +194,15 @@ public class InvoiceCreator extends Pane {
         borderPane.setCenter(scrollPane);
         this.getChildren().add(borderPane);
 
-        handleEntry(gridPane);
+        handleEntry();
     }
 
-    private void handleEntry(GridPane gridPane) {
+    private void handleEntry() {
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                invoice.setValidInvoice(true);
+                // create broker shipper and receiver objects from inputted fields
                 Broker broker = new Broker(brokerCompanyNameTF.getText(), brokerAddressTF.getText(), brokerPhoneNumberTF.getText(),
                         brokerReeferTemperatureTF.getText(), brokerEmailTF.getText(), brokerNameTF.getText(), brokerPONumberTF.getText());
                 Shipper shipper = new Shipper(shipperCompanyNameTF.getText(), shipperAddressTF.getText(), shipperPhoneNumberTF.getText(),
@@ -215,32 +212,52 @@ public class InvoiceCreator extends Pane {
                         receiverReeferTemperatureTF.getText(), receiverDeliveryAddressTF.getText(), receiverPickupDateTimeTF.getText(),
                         receiverApproxWeightTF.getText(), receiverPickupNumberTF.getText());
 
-                BigDecimal grossDecimal = bigDecimalConversion(grossTF);
-                BigDecimal factorCostDecimal = bigDecimalConversion(factorCostTF);
-                BigDecimal dispatchCostDecimal = bigDecimalConversion(dispatchCostTF);
-                BigDecimal otbCostDecimal = bigDecimalConversion(otbCostTF);
-                BigDecimal netDecimal = bigDecimalConversion(netTF);
+                // convert inputted number fields to BigDecimals
+                BigDecimal grossDecimal = bigDecimalConversion(grossTF, "gross");
+                BigDecimal factorCostDecimal = bigDecimalConversion(factorCostTF, "factor cost");
+                BigDecimal dispatchCostDecimal = bigDecimalConversion(dispatchCostTF, "dispatch cost");
+                BigDecimal otbCostDecimal = bigDecimalConversion(otbCostTF, "OTB cost");
+                BigDecimal netDecimal = bigDecimalConversion(netTF, "net");
 
-                Invoice invoice = new Invoice(rkNumberTF.getText(), otbNumberTF.getText(), broker, shipper, receiver,
-                        grossDecimal, pickupDateTF.getText(), deliveryDateTF.getText(), factorCostDecimal, factorDateTF.getText(),
-                        factorDueDateTF.getText(), dispatchCostDecimal, otbCostDecimal, netDecimal);
+                // check for valid values before creating invoice
+                    invoice.setRkNumber(rkNumberTF.getText());
+                    invoice.setOtbNumber(otbNumberTF.getText());
+                    invoice.setBroker(broker);
+                    invoice.setShipper(shipper);
+                    invoice.setReceiver(receiver);
+                    invoice.setGross(grossDecimal);
+                    invoice.setPickupDate(pickupDateTF.getText());
+                    invoice.setDeliveryDate(deliveryDateTF.getText());
+                    invoice.setFactorCost(factorCostDecimal);
+                    invoice.setFactorDate(factorDateTF.getText());
+                    invoice.setFactorDueDate(factorDueDateTF.getText());
+                    invoice.setDispatchCost(dispatchCostDecimal);
+                    invoice.setOtbCost(otbCostDecimal);
+                    invoice.setNet(netDecimal);
+
+
             }
         });
     }
 
-    private BigDecimal bigDecimalConversion(TextField tf) {
+    private BigDecimal bigDecimalConversion(TextField tf, String fieldType) {
         try{
             BigDecimal bigDecimal = new BigDecimal(tf.getText());
             return bigDecimal;
         } catch(NumberFormatException e) {
-            System.out.println(tf.getText() + " is not a valid number.");
-            allowConfirm = false;
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Invalid Input");
+            alert.setHeaderText(null);
+            alert.setContentText(tf.getText() + " is not a valid value for " + fieldType + ".");
+
+            alert.showAndWait();
+
             return null;
         }
     }
 
-    private Invoice returnInvoice() {
-        return null;
+    public Invoice getInvoice() {
+        return invoice;
     }
 
     @Override
