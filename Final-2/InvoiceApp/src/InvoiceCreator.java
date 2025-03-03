@@ -1,7 +1,15 @@
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
+import java.util.*;
 
 public class InvoiceCreator extends Pane {
     // declare variables
@@ -21,6 +29,7 @@ public class InvoiceCreator extends Pane {
     private final Label shipperDeliveryAddressLabel = new Label("Shipper Delivery Address: ");
     private final Label shipperPickupDateTimeLabel = new Label("Shipper Pickup Date: ");
     private final Label shipperApproxWeightLabel = new Label("Shipper Approximate Weight: ");
+    private final Label shipperConfirmationNumberLabel = new Label("Shipper Confirmation Number: ");
     private final Label receiverCompanyNameLabel = new Label("Receiver Company Name: ");
     private final Label receiverAddressLabel = new Label("Receiver Address: ");
     private final Label receiverPhoneNumberLabel = new Label("Receiver Phone Number: ");
@@ -54,6 +63,7 @@ public class InvoiceCreator extends Pane {
     private TextField shipperDeliveryAddressTF = new TextField();
     private TextField shipperPickupDateTimeTF = new TextField();
     private TextField shipperApproxWeightTF = new TextField();
+    private TextField shipperConfirmationNumberTF = new TextField();
     private TextField receiverCompanyNameTF = new TextField();
     private TextField receiverAddressTF = new TextField();
     private TextField receiverPhoneNumberTF = new TextField();
@@ -71,6 +81,7 @@ public class InvoiceCreator extends Pane {
     private TextField dispatchCostTF = new TextField();
     private TextField otbCostTF = new TextField();
     private TextField netTF = new TextField();
+    private Button confirmButton = new Button("Confirm");
 
     // create default InvoiceCreator window
     public InvoiceCreator() {
@@ -78,6 +89,80 @@ public class InvoiceCreator extends Pane {
     }
 
     private void createPane() {
+        // add labels to arraylist for easy iteration
+        List<Label> labels = new ArrayList<>();
+        labels.add(rkNumberLabel);
+        labels.add(otbNumberLabel);
+        labels.add(brokerCompanyNameLabel);
+        labels.add(brokerAddressLabel);
+        labels.add(brokerPhoneNumberLabel);
+        labels.add(brokerReeferTemperatureLabel);
+        labels.add(brokerEmailLabel);
+        labels.add(brokerNameLabel);
+        labels.add(brokerPONumberLabel);
+        labels.add(shipperCompanyNameLabel);
+        labels.add(shipperAddressLabel);
+        labels.add(shipperPhoneNumberLabel);
+        labels.add(shipperReeferTemperatureLabel);
+        labels.add(shipperDeliveryAddressLabel);
+        labels.add(shipperPickupDateTimeLabel);
+        labels.add(shipperApproxWeightLabel);
+        labels.add(shipperConfirmationNumberLabel);
+        labels.add(receiverCompanyNameLabel);
+        labels.add(receiverAddressLabel);
+        labels.add(receiverPhoneNumberLabel);
+        labels.add(receiverReeferTemperatureLabel);
+        labels.add(receiverDeliveryAddressLabel);
+        labels.add(receiverPickupDateTimeLabel);
+        labels.add(receiverApproxWeightLabel);
+        labels.add(receiverConfirmationNumberLabel);
+        labels.add(grossLabel);
+        labels.add(pickupDateLabel);
+        labels.add(deliveryDateLabel);
+        labels.add(factorCostLabel);
+        labels.add(factorDateLabel);
+        labels.add(factorDueDateLabel);
+        labels.add(dispatchCostLabel);
+        labels.add(otbCostLabel);
+        labels.add(netLabel);
+
+        // add text fields to arraylist for easy iteration
+        List<TextField> textFields = new ArrayList<>();
+        textFields.add(rkNumberTF);
+        textFields.add(otbNumberTF);
+        textFields.add(brokerCompanyNameTF);
+        textFields.add(brokerAddressTF);
+        textFields.add(brokerPhoneNumberTF);
+        textFields.add(brokerReeferTemperatureTF);
+        textFields.add(brokerEmailTF);
+        textFields.add(brokerNameTF);
+        textFields.add(brokerPONumberTF);
+        textFields.add(shipperCompanyNameTF);
+        textFields.add(shipperAddressTF);
+        textFields.add(shipperPhoneNumberTF);
+        textFields.add(shipperReeferTemperatureTF);
+        textFields.add(shipperDeliveryAddressTF);
+        textFields.add(shipperPickupDateTimeTF);
+        textFields.add(shipperApproxWeightTF);
+        textFields.add(shipperConfirmationNumberTF);
+        textFields.add(receiverCompanyNameTF);
+        textFields.add(receiverAddressTF);
+        textFields.add(receiverPhoneNumberTF);
+        textFields.add(receiverReeferTemperatureTF);
+        textFields.add(receiverDeliveryAddressTF);
+        textFields.add(receiverPickupDateTimeTF);
+        textFields.add(receiverApproxWeightTF);
+        textFields.add(receiverConfirmationNumberTF);
+        textFields.add(grossTF);
+        textFields.add(pickupDateTF);
+        textFields.add(deliveryDateTF);
+        textFields.add(factorCostTF);
+        textFields.add(factorDateTF);
+        textFields.add(factorDueDateTF);
+        textFields.add(dispatchCostTF);
+        textFields.add(otbCostTF);
+        textFields.add(netTF);
+
         // create main border pane
         BorderPane borderPane = new BorderPane();
 
@@ -85,81 +170,13 @@ public class InvoiceCreator extends Pane {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
 
-        // company numbers
-        gridPane.add(rkNumberLabel, 0, 0);
-        gridPane.add(rkNumberTF, 1, 0);
-        gridPane.add(otbNumberLabel, 0, 1);
-        gridPane.add(otbNumberTF, 1, 1);
-
-        // broker
-        gridPane.add(brokerCompanyNameLabel, 0, 2);
-        gridPane.add(brokerCompanyNameTF, 1, 2);
-        gridPane.add(brokerAddressLabel, 0, 3);
-        gridPane.add(brokerAddressTF, 1, 3);
-        gridPane.add(brokerPhoneNumberLabel, 0, 4);
-        gridPane.add(brokerPhoneNumberTF, 1, 4);
-        gridPane.add(brokerReeferTemperatureLabel, 0, 5);
-        gridPane.add(brokerReeferTemperatureTF, 1, 5);
-        gridPane.add(brokerEmailLabel, 0, 6);
-        gridPane.add(brokerEmailTF, 1, 6);
-        gridPane.add(brokerNameLabel, 0, 7);
-        gridPane.add(brokerNameTF, 1, 7);
-        gridPane.add(brokerPONumberLabel, 0, 8);
-        gridPane.add(brokerPONumberTF, 1, 8);
-
-        // shipper
-        gridPane.add(shipperCompanyNameLabel, 0, 9);
-        gridPane.add(shipperCompanyNameTF, 1, 9);
-        gridPane.add(shipperAddressLabel, 0, 10);
-        gridPane.add(shipperAddressTF, 1, 10);
-        gridPane.add(shipperPhoneNumberLabel, 0, 11);
-        gridPane.add(shipperPhoneNumberTF, 1, 11);
-        gridPane.add(shipperReeferTemperatureLabel, 0, 12);
-        gridPane.add(shipperReeferTemperatureTF, 1, 12);
-        gridPane.add(shipperDeliveryAddressLabel, 0, 13);
-        gridPane.add(shipperDeliveryAddressTF, 1, 13);
-        gridPane.add(shipperPickupDateTimeLabel, 0, 14);
-        gridPane.add(shipperPickupDateTimeTF, 1, 14);
-        gridPane.add(shipperApproxWeightLabel, 0, 15);
-        gridPane.add(shipperApproxWeightTF, 1, 15);
-
-        // receiver
-        gridPane.add(receiverCompanyNameLabel, 0, 16);
-        gridPane.add(receiverCompanyNameTF, 1, 16);
-        gridPane.add(receiverAddressLabel, 0, 17);
-        gridPane.add(receiverAddressTF, 1, 17);
-        gridPane.add(receiverPhoneNumberLabel, 0, 18);
-        gridPane.add(receiverPhoneNumberTF, 1, 18);
-        gridPane.add(receiverReeferTemperatureLabel, 0, 19);
-        gridPane.add(receiverReeferTemperatureTF, 1, 19);
-        gridPane.add(receiverDeliveryAddressLabel, 0, 20);
-        gridPane.add(receiverDeliveryAddressTF, 1, 20);
-        gridPane.add(receiverPickupDateTimeLabel, 0, 21);
-        gridPane.add(receiverPickupDateTimeTF, 1, 21);
-        gridPane.add(receiverApproxWeightLabel, 0, 22);
-        gridPane.add(receiverApproxWeightTF, 1, 22);
-        gridPane.add(receiverConfirmationNumberLabel, 0, 23);
-        gridPane.add(receiverConfirmationNumberTF, 1, 23);
-
-        // gross, dates, factors, costs, net
-        gridPane.add(grossLabel, 0, 24);
-        gridPane.add(grossTF, 1, 24);
-        gridPane.add(pickupDateLabel, 0, 25);
-        gridPane.add(pickupDateTF, 1, 25);
-        gridPane.add(deliveryDateLabel, 0, 26);
-        gridPane.add(deliveryDateTF, 1, 26);
-        gridPane.add(factorCostLabel, 0, 27);
-        gridPane.add(factorCostTF, 1, 27);
-        gridPane.add(factorDateLabel, 0, 28);
-        gridPane.add(factorDateTF, 1, 28);
-        gridPane.add(factorDueDateLabel, 0, 29);
-        gridPane.add(factorDueDateTF, 1, 29);
-        gridPane.add(dispatchCostLabel, 0, 30);
-        gridPane.add(dispatchCostTF, 1, 30);
-        gridPane.add(otbCostLabel, 0, 31);
-        gridPane.add(otbCostTF, 1, 31);
-        gridPane.add(netLabel, 0, 32);
-        gridPane.add(netTF, 1, 32);
+        // add labels and fields
+        int row = 0;
+        for(Label label : labels) {
+            gridPane.add(label, 0, row);
+            gridPane.add(textFields.get(row), 1, row);
+            row++;
+        }
 
         // wrap in vbox so scrolling actually works
         VBox vBox = new VBox(gridPane);
@@ -170,11 +187,35 @@ public class InvoiceCreator extends Pane {
         ScrollPane scrollPane = new ScrollPane(vBox);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(false);
-        scrollPane.setPrefViewportHeight(600);
+        scrollPane.setPrefViewportHeight(500);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+
+        // place confirm button
+        borderPane.setBottom(confirmButton);
+        BorderPane.setAlignment(confirmButton, Pos.CENTER);
 
         borderPane.setCenter(scrollPane);
         this.getChildren().add(borderPane);
+
+        handleEntry(gridPane);
+    }
+
+    private void handleEntry(GridPane gridPane) {
+        confirmButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                Broker broker = new Broker(brokerCompanyNameTF.getText(), brokerAddressTF.getText(), brokerPhoneNumberTF.getText(),
+                        brokerReeferTemperatureTF.getText(), brokerEmailTF.getText(), brokerNameTF.getText(), brokerPONumberTF.getText());
+                Shipper shipper = new Shipper(shipperCompanyNameTF.getText(), shipperAddressTF.getText(), shipperPhoneNumberTF.getText(),
+                        shipperReeferTemperatureTF.getText(), shipperDeliveryAddressTF.getText(), shipperPickupDateTimeLabel.getText(),
+                        shipperApproxWeightTF.getText(), shipperConfirmationNumberTF.getText());
+                //Invoice invoice = new Invoice(rkNumberTF.getText(), otbNumberTF.getText())
+            }
+        });
+    }
+
+    private Invoice returnInvoice() {
+        return null;
     }
 
     @Override
