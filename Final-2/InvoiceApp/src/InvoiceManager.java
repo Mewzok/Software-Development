@@ -8,11 +8,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class InvoiceManager extends Application {
+public class InvoiceManager extends Application implements WindowCloseCallback {
+    ArrayList<Invoice> invoices = new ArrayList<>();
     private Button addButton = new Button("Add");
     private Button editButton = new Button("Edit");
     private Button removeButton = new Button("Delete");
@@ -30,12 +32,9 @@ public class InvoiceManager extends Application {
         // place headers in first row, also determine size of each column
         placeHeadersInRow(mainGrid);
 
-        ArrayList<Invoice> invoices = InvoiceStorage.loadInvoices();
+        invoices = InvoiceStorage.loadInvoices();
 
-        // add all invoices to main grid
-        for (Invoice invoiceT : invoices) {
-            addInvoiceToGrid(mainGrid, invoiceT);
-        }
+        loadInvoicesToGrid(mainGrid);
 
         manageButtons(mainBorderPane);
 
@@ -52,6 +51,15 @@ public class InvoiceManager extends Application {
                 icStage.setTitle("Invoice Creator");
                 icStage.setScene(new Scene(IC));
                 icStage.show();
+
+                Invoice newInvoice = IC.getInvoice();
+
+                System.out.println(newInvoice.isValidInvoice());
+
+                    invoices.add(newInvoice);
+
+                    InvoiceStorage.saveInvoices(invoices);
+                    icStage.close();
             }
         });
 
@@ -88,11 +96,11 @@ public class InvoiceManager extends Application {
                 inv.getShipper().getCompanyName(),
                 inv.getReceiver().getCompanyName(),
                 inv.getGross().toString(),
-                DateFormatter.formatDate(inv.getPickupDate()),
-                DateFormatter.formatDate(inv.getDeliveryDate()),
+                inv.getPickupDate(),
+                inv.getDeliveryDate(),
                 inv.getFactorCost().toString(),
-                DateFormatter.formatDate(inv.getFactorDate()),
-                DateFormatter.formatDate(inv.getFactorDueDate()),
+                inv.getFactorDate(),
+                inv.getFactorDueDate(),
                 inv.getDispatchCost().toString(),
                 inv.getOtbCost().toString(),
                 inv.getNet().toString() };
@@ -116,6 +124,13 @@ public class InvoiceManager extends Application {
         }
     }
 
+    private void loadInvoicesToGrid(GridPane mGrid) {
+        // add all invoices to main grid
+        for (Invoice invoice : invoices) {
+            addInvoiceToGrid(mGrid, invoice);
+        }
+    }
+
     private void manageButtons(BorderPane mBPane) {
         // place buttons in pane
         HBox buttonHBox = new HBox(8);
@@ -126,7 +141,16 @@ public class InvoiceManager extends Application {
         mBPane.setBottom(buttonHBox);
     }
 
+    @Override
+    public void onCloseWindow() {
+
+    }
+
     public static void main(String[] args) throws Exception {
         Application.launch(args);
     }
+}
+
+interface WindowCloseCallback {
+    void onCloseWindow();
 }
