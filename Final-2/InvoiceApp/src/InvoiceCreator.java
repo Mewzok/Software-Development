@@ -10,6 +10,7 @@ import java.util.*;
 public class InvoiceCreator extends Pane {
     // declare variables
     Invoice invoice = new Invoice();
+    private WindowCloseCallback callback;
     private final Label rkNumberLabel = new Label("RK#: ");
     private final Label otbNumberLabel = new Label("OTB#: ");
     private final Label brokerCompanyNameLabel = new Label("Broker Company Name: ");
@@ -81,7 +82,8 @@ public class InvoiceCreator extends Pane {
     private Button confirmButton = new Button("Confirm");
 
     // create default InvoiceCreator window
-    public InvoiceCreator() {
+    public InvoiceCreator(WindowCloseCallback callback) {
+        this.callback = callback;
         createPane();
     }
 
@@ -220,6 +222,7 @@ public class InvoiceCreator extends Pane {
                 BigDecimal netDecimal = bigDecimalConversion(netTF, "net");
 
                 // check for valid values before creating invoice
+                if(invoice.isValidInvoice()) {
                     invoice.setRkNumber(rkNumberTF.getText());
                     invoice.setOtbNumber(otbNumberTF.getText());
                     invoice.setBroker(broker);
@@ -235,7 +238,8 @@ public class InvoiceCreator extends Pane {
                     invoice.setOtbCost(otbCostDecimal);
                     invoice.setNet(netDecimal);
 
-
+                    callback.onCloseWindow();
+                }
             }
         });
     }
@@ -245,13 +249,14 @@ public class InvoiceCreator extends Pane {
             BigDecimal bigDecimal = new BigDecimal(tf.getText());
             return bigDecimal;
         } catch(NumberFormatException e) {
+            invoice.setValidInvoice(false);
+
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Input");
             alert.setHeaderText(null);
             alert.setContentText(tf.getText() + " is not a valid value for " + fieldType + ".");
 
             alert.showAndWait();
-
             return null;
         }
     }
