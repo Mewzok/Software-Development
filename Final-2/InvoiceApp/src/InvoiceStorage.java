@@ -14,7 +14,7 @@ public class InvoiceStorage {
         try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
             output.writeObject(invoices);
         } catch (IOException e) {
-            System.out.println("An error occured when saving to file.");
+            System.out.println("An error occurred when saving to file.");
             e.printStackTrace();
         }
     }
@@ -22,12 +22,12 @@ public class InvoiceStorage {
     public static ArrayList<Invoice> loadInvoices() {
         File file = new File(FILE_PATH);
         if (!file.exists())
-            return new ArrayList<>();
+            return new ArrayList<Invoice>();
 
         try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
             return (ArrayList<Invoice>) input.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("An error occured when loading from file.");
+            System.out.println("An error occurred when loading from file.");
             e.printStackTrace();
             return new ArrayList<>();
         }
