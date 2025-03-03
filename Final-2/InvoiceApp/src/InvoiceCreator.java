@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class InvoiceCreator extends Pane {
@@ -37,7 +38,7 @@ public class InvoiceCreator extends Pane {
     private final Label receiverDeliveryAddressLabel = new Label("Receiver Delivery Address: ");
     private final Label receiverPickupDateTimeLabel = new Label("Receiver Pickup Date: ");
     private final Label receiverApproxWeightLabel = new Label("Receiver Approximate Weight: ");
-    private final Label receiverConfirmationNumberLabel = new Label("Receiver Confirmation Number: ");
+    private final Label receiverPickupNumberLabel = new Label("Receiver Confirmation Number: ");
     private final Label grossLabel = new Label("Gross: ");
     private final Label pickupDateLabel = new Label("Pickup Date: ");
     private final Label deliveryDateLabel = new Label("Delivery Date: ");
@@ -61,7 +62,7 @@ public class InvoiceCreator extends Pane {
     private TextField shipperPhoneNumberTF = new TextField();
     private TextField shipperReeferTemperatureTF = new TextField();
     private TextField shipperDeliveryAddressTF = new TextField();
-    private TextField shipperPickupDateTimeTF = new TextField();
+    private TextField shipperPickupDateTimeTF = new TextField("");
     private TextField shipperApproxWeightTF = new TextField();
     private TextField shipperConfirmationNumberTF = new TextField();
     private TextField receiverCompanyNameTF = new TextField();
@@ -71,7 +72,7 @@ public class InvoiceCreator extends Pane {
     private TextField receiverDeliveryAddressTF = new TextField();
     private TextField receiverPickupDateTimeTF = new TextField();
     private TextField receiverApproxWeightTF = new TextField();
-    private TextField receiverConfirmationNumberTF = new TextField();
+    private TextField receiverPickupNumberTF = new TextField();
     private TextField grossTF = new TextField();
     private TextField pickupDateTF = new TextField();
     private TextField deliveryDateTF = new TextField();
@@ -82,6 +83,7 @@ public class InvoiceCreator extends Pane {
     private TextField otbCostTF = new TextField();
     private TextField netTF = new TextField();
     private Button confirmButton = new Button("Confirm");
+    private boolean allowConfirm = true;
 
     // create default InvoiceCreator window
     public InvoiceCreator() {
@@ -115,7 +117,7 @@ public class InvoiceCreator extends Pane {
         labels.add(receiverDeliveryAddressLabel);
         labels.add(receiverPickupDateTimeLabel);
         labels.add(receiverApproxWeightLabel);
-        labels.add(receiverConfirmationNumberLabel);
+        labels.add(receiverPickupNumberLabel);
         labels.add(grossLabel);
         labels.add(pickupDateLabel);
         labels.add(deliveryDateLabel);
@@ -152,7 +154,7 @@ public class InvoiceCreator extends Pane {
         textFields.add(receiverDeliveryAddressTF);
         textFields.add(receiverPickupDateTimeTF);
         textFields.add(receiverApproxWeightTF);
-        textFields.add(receiverConfirmationNumberTF);
+        textFields.add(receiverPickupNumberTF);
         textFields.add(grossTF);
         textFields.add(pickupDateTF);
         textFields.add(deliveryDateTF);
@@ -209,9 +211,32 @@ public class InvoiceCreator extends Pane {
                 Shipper shipper = new Shipper(shipperCompanyNameTF.getText(), shipperAddressTF.getText(), shipperPhoneNumberTF.getText(),
                         shipperReeferTemperatureTF.getText(), shipperDeliveryAddressTF.getText(), shipperPickupDateTimeLabel.getText(),
                         shipperApproxWeightTF.getText(), shipperConfirmationNumberTF.getText());
-                //Invoice invoice = new Invoice(rkNumberTF.getText(), otbNumberTF.getText())
+                Receiver receiver = new Receiver(receiverCompanyNameTF.getText(), receiverAddressTF.getText(), receiverPhoneNumberTF.getText(),
+                        receiverReeferTemperatureTF.getText(), receiverDeliveryAddressTF.getText(), receiverPickupDateTimeTF.getText(),
+                        receiverApproxWeightTF.getText(), receiverPickupNumberTF.getText());
+
+                BigDecimal grossDecimal = bigDecimalConversion(grossTF);
+                BigDecimal factorCostDecimal = bigDecimalConversion(factorCostTF);
+                BigDecimal dispatchCostDecimal = bigDecimalConversion(dispatchCostTF);
+                BigDecimal otbCostDecimal = bigDecimalConversion(otbCostTF);
+                BigDecimal netDecimal = bigDecimalConversion(netTF);
+
+                Invoice invoice = new Invoice(rkNumberTF.getText(), otbNumberTF.getText(), broker, shipper, receiver,
+                        grossDecimal, pickupDateTF.getText(), deliveryDateTF.getText(), factorCostDecimal, factorDateTF.getText(),
+                        factorDueDateTF.getText(), dispatchCostDecimal, otbCostDecimal, netDecimal);
             }
         });
+    }
+
+    private BigDecimal bigDecimalConversion(TextField tf) {
+        try{
+            BigDecimal bigDecimal = new BigDecimal(tf.getText());
+            return bigDecimal;
+        } catch(NumberFormatException e) {
+            System.out.println(tf.getText() + " is not a valid number.");
+            allowConfirm = false;
+            return null;
+        }
     }
 
     private Invoice returnInvoice() {
