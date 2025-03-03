@@ -1,6 +1,9 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -12,7 +15,8 @@ import java.util.Date;
 public class BarryGoldwaterInvoices extends Application {
     @Override
     public void start(Stage primaryStage) {
-        // declare variables
+        // create main pane
+        BorderPane mainBorderPane = new BorderPane();
 
         // create main grid
         GridPane mainGrid = new GridPane();
@@ -22,35 +26,19 @@ public class BarryGoldwaterInvoices extends Application {
         // place headers in first row, also determine size of each column
         placeHeadersInRow(mainGrid);
 
-        // example, delete
-        // Invoice invoice = new Invoice("RK008-M", "N/A",
-        // new Broker("Broker Name", "123 Main St", "5555555555", 11.4,
-        // "fake@email.com", "brokerName",
-        // "poNumber"),
-        // new Shipper("Shipper Name", "123 Main St", "phonenumber", 81.5,
-        // "delivery address", "pickupDateandTime",
-        // 408.5, 4015791),
-        // new Receiver("Receiver Name", "123 Main St", "phonenumber", 81.5,
-        // "delivery address",
-        // "pickupDateandTime", 408.5, 4015791),
-        // new BigDecimal("1500.00"),
-        // new Date(), new Date(), new BigDecimal("200.00"),
-        // new Date(), new Date(), new BigDecimal("50.00"),
-        // new BigDecimal("100.00"), new BigDecimal("1150.00"));
-
         ArrayList<Invoice> invoices = InvoiceStorage.loadInvoices();
-        // invoices.add(invoice);
-        // InvoiceStorage.saveInvoices(invoices);
-
-        invoices.get(0).getBroker();
 
         // add all invoices to main grid
         for (Invoice invoiceT : invoices) {
             addInvoiceToGrid(mainGrid, invoiceT);
         }
 
+        manageButtons(mainBorderPane);
+
+        mainBorderPane.setCenter(mainGrid);
+
         // set and place main window scene
-        Scene scene = new Scene(mainGrid);
+        Scene scene = new Scene(mainBorderPane);
         primaryStage.setTitle("Failed Presidential Nominee Barry Goldwater's Invoices");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -91,7 +79,7 @@ public class BarryGoldwaterInvoices extends Application {
                 inv.getOtbCost().toString(),
                 inv.getNet().toString() };
 
-        // set data row from invoice array
+        // set row data from invoice array
         double columnWidth = 100;
         for (int col = 0; col < invoiceData.length; col++) {
             StackPane cell = new StackPane(new Label(invoiceData[col]));
@@ -108,6 +96,33 @@ public class BarryGoldwaterInvoices extends Application {
             columnConstraints.setMaxWidth(Double.MAX_VALUE);
             mGrid.getColumnConstraints().add(columnConstraints);
         }
+    }
+
+    private void manageButtons(BorderPane mBPane) {
+        // place buttons in pane
+        Button addButton = new Button("Add");
+        Button editButton = new Button("Edit");
+        Button removeButton = new Button("Delete");
+
+        HBox buttonHBox = new HBox(8);
+
+        buttonHBox.getChildren().addAll(addButton, editButton, removeButton);
+
+        buttonHBox.setAlignment(Pos.CENTER);
+        mBPane.setBottom(buttonHBox);
+
+        // manage add event
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                InvoiceCreator IC = new InvoiceCreator();
+
+                Stage icStage = new Stage();
+                icStage.setTitle("Invoice Creator");
+                icStage.setScene(new Scene(IC));
+                icStage.show();
+            }
+        });
     }
 
     public static void main(String[] args) throws Exception {
