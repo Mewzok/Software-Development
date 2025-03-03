@@ -18,6 +18,8 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     private Button addButton = new Button("Add");
     private Button editButton = new Button("Edit");
     private Button removeButton = new Button("Delete");
+    InvoiceCreator IC = new InvoiceCreator(InvoiceManager.this);
+    Stage icStage = new Stage();
 
     @Override
     public void start(Stage primaryStage) {
@@ -45,21 +47,9 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                InvoiceCreator IC = new InvoiceCreator();
-
-                Stage icStage = new Stage();
                 icStage.setTitle("Invoice Creator");
                 icStage.setScene(new Scene(IC));
                 icStage.show();
-
-                Invoice newInvoice = IC.getInvoice();
-
-                System.out.println(newInvoice.isValidInvoice());
-
-                    invoices.add(newInvoice);
-
-                    InvoiceStorage.saveInvoices(invoices);
-                    icStage.close();
             }
         });
 
@@ -143,7 +133,15 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
     @Override
     public void onCloseWindow() {
+        Invoice newInvoice = IC.getInvoice();
 
+        System.out.println(newInvoice.isValidInvoice());
+        System.out.println(newInvoice.getDispatchCost());
+
+        invoices.add(newInvoice);
+
+        InvoiceStorage.saveInvoices(invoices);
+        icStage.close();
     }
 
     public static void main(String[] args) throws Exception {
