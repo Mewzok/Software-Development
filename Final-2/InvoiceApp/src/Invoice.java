@@ -9,19 +9,19 @@ public class Invoice implements Serializable {
     private Shipper shipper;
     private Receiver receiver;
     private BigDecimal gross;
-    private Date pickupDate;
-    private Date deliveryDate;
+    private String pickupDate;
+    private String deliveryDate;
     private BigDecimal factorCost;
-    private Date factorDate;
-    private Date factorDueDate;
+    private String factorDate;
+    private String factorDueDate;
     private BigDecimal dispatchCost;
     private BigDecimal otbCost;
     private BigDecimal net;
 
     // all arg constructor
     public Invoice(String rkNumber, String otbNumber, Broker broker, Shipper shipper, Receiver receiver,
-            BigDecimal gross, Date pickupDate, Date deliveryDate, BigDecimal factorCost, Date factorDate,
-            Date factorDueDate, BigDecimal dispatchCost,
+            BigDecimal gross, String pickupDate, String deliveryDate, BigDecimal factorCost, String factorDate,
+            String factorDueDate, BigDecimal dispatchCost,
             BigDecimal otbCost, BigDecimal net) {
         this.rkNumber = rkNumber;
         this.otbNumber = otbNumber;
@@ -64,11 +64,11 @@ public class Invoice implements Serializable {
         return gross;
     }
 
-    public Date getPickupDate() {
+    public String getPickupDate() {
         return pickupDate;
     }
 
-    public Date getDeliveryDate() {
+    public String getDeliveryDate() {
         return deliveryDate;
     }
 
@@ -76,11 +76,11 @@ public class Invoice implements Serializable {
         return factorCost;
     }
 
-    public Date getFactorDate() {
+    public String getFactorDate() {
         return factorDate;
     }
 
-    public Date getFactorDueDate() {
+    public String getFactorDueDate() {
         return factorDueDate;
     }
 
@@ -121,11 +121,11 @@ public class Invoice implements Serializable {
         this.gross = gross;
     }
 
-    public void setPickupDate(Date pickupDate) {
+    public void setPickupDate(String pickupDate) {
         this.pickupDate = pickupDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(String deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 
@@ -133,11 +133,11 @@ public class Invoice implements Serializable {
         this.factorCost = factorCost;
     }
 
-    public void setFactorDate(Date factorDate) {
+    public void setFactorDate(String factorDate) {
         this.factorDate = factorDate;
     }
 
-    public void setFactorDueDate(Date factorDueDate) {
+    public void setFactorDueDate(String factorDueDate) {
         this.factorDueDate = factorDueDate;
     }
 
