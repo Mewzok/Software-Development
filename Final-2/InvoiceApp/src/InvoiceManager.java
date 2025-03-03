@@ -9,10 +9,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class InvoiceManager extends Application implements WindowCloseCallback {
     ArrayList<Invoice> invoices = new ArrayList<>();
@@ -44,7 +41,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         loadInvoicesToGrid();
 
-        manageButtons(mainBorderPane);
+        addButtonsToPane(mainBorderPane);
 
         // delete
         //mainBorderPane.setCenter(mainGrid);
@@ -110,6 +107,10 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             cell.setAlignment(Pos.CENTER);
             mainGrid.add(cell, col, row);
 
+            // attach event listener for cell editing
+            enableCellEditing(cell, col, row);
+
+            // set grid size per cell
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setHgrow(Priority.ALWAYS);
             mainGrid.getColumnConstraints().add(columnConstraints);
@@ -127,7 +128,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         }
     }
 
-    private void manageButtons(BorderPane mBPane) {
+    private void addButtonsToPane(BorderPane mBPane) {
         // place buttons in pane
         HBox buttonHBox = new HBox(8);
 
@@ -135,6 +136,13 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         buttonHBox.setAlignment(Pos.CENTER);
         mBPane.setBottom(buttonHBox);
+    }
+
+    private void enableCellEditing(StackPane cell, int colIndex, int rowIndex) {
+        cell.setOnMouseClicked(e -> {
+            Invoice selectedInvoice = invoices.get(rowIndex);
+            System.out.println(selectedInvoice);
+        });
     }
 
     @Override
