@@ -17,6 +17,25 @@ public class Invoice implements Serializable {
     private BigDecimal dispatchCost;
     private BigDecimal otbCost;
     private BigDecimal net;
+    private boolean validInvoice;
+
+    public Invoice() {
+        this.rkNumber = "";
+        this.otbNumber = "";
+        this.broker = null;
+        this.shipper = null;
+        this.receiver = null;
+        this.gross = new BigDecimal(0);
+        this.pickupDate = "";
+        this.deliveryDate = "";
+        this.factorCost = new BigDecimal(0);
+        this.factorDate = "";
+        this.factorDueDate = "";
+        this.dispatchCost = new BigDecimal(0);
+        this.otbCost = new BigDecimal(0);
+        this.net = new BigDecimal(0);
+        this.validInvoice = false;
+    };
 
     // all arg constructor
     public Invoice(String rkNumber, String otbNumber, Broker broker, Shipper shipper, Receiver receiver,
@@ -37,6 +56,7 @@ public class Invoice implements Serializable {
         this.dispatchCost = dispatchCost;
         this.otbCost = otbCost;
         this.net = net;
+        this.validInvoice = true;
     }
 
     // Getters
@@ -96,6 +116,10 @@ public class Invoice implements Serializable {
         return net;
     }
 
+    public boolean isValidInvoice() {
+        return validInvoice;
+    }
+
     // Setters
     public void setRkNumber(String rkNumber) {
         this.rkNumber = rkNumber;
@@ -151,5 +175,9 @@ public class Invoice implements Serializable {
 
     public void setNet(BigDecimal net) {
         this.net = net;
+    }
+
+    public void setValidInvoice(boolean validInvoice) {
+        this.validInvoice = validInvoice;
     }
 }
