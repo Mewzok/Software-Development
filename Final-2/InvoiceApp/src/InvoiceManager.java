@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -31,6 +32,11 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         mainGrid.setHgap(0);
         mainGrid.setVgap(0);
 
+        // create scroll bar
+        ScrollPane scrollPane = new ScrollPane(mainGrid);
+        scrollPane.setFitToWidth(true);
+        mainBorderPane.setCenter(scrollPane);
+
         // place headers in first row, also determine size of each column
         placeHeadersInRow();
 
@@ -40,7 +46,8 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         manageButtons(mainBorderPane);
 
-        mainBorderPane.setCenter(mainGrid);
+        // delete
+        //mainBorderPane.setCenter(mainGrid);
 
         // handle button events
         // add event
@@ -57,6 +64,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         Scene scene = new Scene(mainBorderPane);
         primaryStage.setTitle("Invoice Manager");
         primaryStage.setScene(scene);
+        primaryStage.setHeight(700);
         primaryStage.show();
     }
 
