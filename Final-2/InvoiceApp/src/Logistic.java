@@ -5,12 +5,12 @@ public abstract class Logistic implements Serializable {
     protected String companyName;
     protected String address;
     protected String phoneNumber;
-    protected double reeferTemperature;
+    protected String reeferTemperature;
 
     public Logistic() {
     }
 
-    public Logistic(String companyName, String address, String phoneNumber, double reeferTemperature) {
+    public Logistic(String companyName, String address, String phoneNumber, String reeferTemperature) {
         this.companyName = companyName;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -30,7 +30,7 @@ public abstract class Logistic implements Serializable {
         return phoneNumber;
     }
 
-    public double getReeferTemperature() {
+    public String getReeferTemperature() {
         return reeferTemperature;
     }
 
@@ -47,7 +47,7 @@ public abstract class Logistic implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setReeferTemperature(double reeferTemperature) {
+    public void setReeferTemperature(String reeferTemperature) {
         this.reeferTemperature = reeferTemperature;
     }
 }

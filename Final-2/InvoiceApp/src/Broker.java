@@ -8,7 +8,7 @@ public class Broker extends Logistic implements Serializable {
     public Broker() {
     }
 
-    public Broker(String companyName, String address, String phoneNumber, double reeferTemperature, String email,
+    public Broker(String companyName, String address, String phoneNumber, String reeferTemperature, String email,
             String brokerName, String poNumber) {
         super(companyName, address, phoneNumber, reeferTemperature);
         this.email = email;

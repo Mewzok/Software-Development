@@ -1,13 +1,13 @@
 public class Transport extends Logistic {
     protected String deliveryAddress;
     protected String pickupDateTime;
-    protected double approximateWeight;
+    protected String approximateWeight;
 
     public Transport() {
     }
 
-    public Transport(String companyName, String address, String phoneNumber, double reeferTemperature,
-            String deliveryAddress, String pickupDateTime, double approximateWeight) {
+    public Transport(String companyName, String address, String phoneNumber, String reeferTemperature,
+            String deliveryAddress, String pickupDateTime, String approximateWeight) {
         super(companyName, address, phoneNumber, reeferTemperature);
         this.deliveryAddress = deliveryAddress;
         this.pickupDateTime = pickupDateTime;
@@ -23,7 +23,7 @@ public class Transport extends Logistic {
         return pickupDateTime;
     }
 
-    public double getApproximateWeight() {
+    public String getApproximateWeight() {
         return approximateWeight;
     }
 
@@ -36,7 +36,7 @@ public class Transport extends Logistic {
         this.pickupDateTime = pickupDateTime;
     }
 
-    public void setApproximateWeight(double approximateWeight) {
+    public void setApproximateWeight(String approximateWeight) {
         this.approximateWeight = approximateWeight;
     }
 }

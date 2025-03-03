@@ -1,24 +1,24 @@
 import java.io.Serializable;
 
 public class Receiver extends Transport implements Serializable {
-    protected long pickupNumber;
+    protected String pickupNumber;
 
     public Receiver() {
     }
 
-    public Receiver(String companyName, String address, String phoneNumber, double reeferTemperature,
-            String deliveryAddress, String pickupDateTime, double approximateWeight, long confirmationNumber) {
+    public Receiver(String companyName, String address, String phoneNumber, String reeferTemperature,
+            String deliveryAddress, String pickupDateTime, String approximateWeight, String confirmationNumber) {
         super(companyName, address, phoneNumber, reeferTemperature, deliveryAddress, pickupDateTime, approximateWeight);
         this.pickupNumber = confirmationNumber;
     }
 
     // getters
-    public long getPickupNumber() {
+    public String getPickupNumber() {
         return pickupNumber;
     }
 
     // setters
-    public void setPickupNumber(long pickupNumber) {
+    public void setPickupNumber(String pickupNumber) {
         this.pickupNumber = pickupNumber;
     }
 }
