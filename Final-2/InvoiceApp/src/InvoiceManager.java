@@ -12,7 +12,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class BarryGoldwaterInvoices extends Application {
+public class InvoiceManager extends Application {
+    private Button addButton = new Button("Add");
+    private Button editButton = new Button("Edit");
+    private Button removeButton = new Button("Delete");
+
     @Override
     public void start(Stage primaryStage) {
         // create main pane
@@ -37,9 +41,23 @@ public class BarryGoldwaterInvoices extends Application {
 
         mainBorderPane.setCenter(mainGrid);
 
+        // handle button events
+        // add event
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                InvoiceCreator IC = new InvoiceCreator();
+
+                Stage icStage = new Stage();
+                icStage.setTitle("Invoice Creator");
+                icStage.setScene(new Scene(IC));
+                icStage.show();
+            }
+        });
+
         // set and place main window scene
         Scene scene = new Scene(mainBorderPane);
-        primaryStage.setTitle("Failed Presidential Nominee Barry Goldwater's Invoices");
+        primaryStage.setTitle("Invoice Manager");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -100,29 +118,12 @@ public class BarryGoldwaterInvoices extends Application {
 
     private void manageButtons(BorderPane mBPane) {
         // place buttons in pane
-        Button addButton = new Button("Add");
-        Button editButton = new Button("Edit");
-        Button removeButton = new Button("Delete");
-
         HBox buttonHBox = new HBox(8);
 
         buttonHBox.getChildren().addAll(addButton, editButton, removeButton);
 
         buttonHBox.setAlignment(Pos.CENTER);
         mBPane.setBottom(buttonHBox);
-
-        // manage add event
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                InvoiceCreator IC = new InvoiceCreator();
-
-                Stage icStage = new Stage();
-                icStage.setTitle("Invoice Creator");
-                icStage.setScene(new Scene(IC));
-                icStage.show();
-            }
-        });
     }
 
     public static void main(String[] args) throws Exception {
