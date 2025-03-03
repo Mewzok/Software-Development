@@ -18,8 +18,9 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     private Button addButton = new Button("Add");
     private Button editButton = new Button("Edit");
     private Button removeButton = new Button("Delete");
-    InvoiceCreator IC = new InvoiceCreator(InvoiceManager.this);
-    Stage icStage = new Stage();
+    private GridPane mainGrid = new GridPane();
+    private InvoiceCreator IC = new InvoiceCreator(InvoiceManager.this);
+    private Stage icStage = new Stage();
 
     @Override
     public void start(Stage primaryStage) {
@@ -27,16 +28,15 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         BorderPane mainBorderPane = new BorderPane();
 
         // create main grid
-        GridPane mainGrid = new GridPane();
         mainGrid.setHgap(0);
         mainGrid.setVgap(0);
 
         // place headers in first row, also determine size of each column
-        placeHeadersInRow(mainGrid);
+        placeHeadersInRow();
 
         invoices = InvoiceStorage.loadInvoices();
 
-        loadInvoicesToGrid(mainGrid);
+        loadInvoicesToGrid();
 
         manageButtons(mainBorderPane);
 
@@ -61,7 +61,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     }
 
     // place headers in first row, also determine size of each column
-    private void placeHeadersInRow(GridPane mGrid) {
+    private void placeHeadersInRow() {
         // create header String array
         String[] headers = {
                 "RK Number", "OTB Number", "Broker", "Shipper", "Receiver", "Gross", "Pickup Date", "Delivery Date",
@@ -73,11 +73,11 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         for (int col = 0; col < headers.length; col++) {
             StackPane cell = new StackPane(new Label(headers[col]));
             cell.setStyle("-fx-border-color: black; -fx-padding: 5; -fx-background-color: lightgray;");
-            mGrid.add(cell, col, 0);
+            mainGrid.add(cell, col, 0);
         }
     }
 
-    private void addInvoiceToGrid(GridPane mGrid, Invoice inv) {
+    private void addInvoiceToGrid(Invoice inv, int row) {
         // make invoice params into String array
         String[] invoiceData = {
                 inv.getRkNumber(),
@@ -96,28 +96,26 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
                 inv.getNet().toString() };
 
         // set row data from invoice array
-        double columnWidth = 100;
         for (int col = 0; col < invoiceData.length; col++) {
             StackPane cell = new StackPane(new Label(invoiceData[col]));
             cell.setStyle("-fx-border-color: black; -fx-padding: 5; -fx-background-color: white;");
             cell.setAlignment(Pos.CENTER);
-            mGrid.add(cell, col, 1);
+            mainGrid.add(cell, col, row);
 
-            if (columnWidth < cell.getWidth()) {
-                columnWidth = cell.getWidth();
-            }
             ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setMinWidth(columnWidth);
-            columnConstraints.setPrefWidth(columnWidth);
-            columnConstraints.setMaxWidth(Double.MAX_VALUE);
-            mGrid.getColumnConstraints().add(columnConstraints);
+            columnConstraints.setHgrow(Priority.ALWAYS);
+            mainGrid.getColumnConstraints().add(columnConstraints);
         }
     }
 
-    private void loadInvoicesToGrid(GridPane mGrid) {
+    private void loadInvoicesToGrid() {
+        // declare variables
+        int rowIndex = 1;
+
         // add all invoices to main grid
         for (Invoice invoice : invoices) {
-            addInvoiceToGrid(mGrid, invoice);
+            addInvoiceToGrid(invoice, rowIndex);
+            rowIndex++;
         }
     }
 
@@ -142,6 +140,8 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         InvoiceStorage.saveInvoices(invoices);
         icStage.close();
+
+        loadInvoicesToGrid();
     }
 
     public static void main(String[] args) throws Exception {
