@@ -11,9 +11,7 @@ import java.util.ArrayList;
 
 public class InvoiceManager extends Application implements WindowCloseCallback {
     ArrayList<Invoice> invoices = new ArrayList<>();
-    private Button addButton = new Button("Add");
-    private Button editButton = new Button("Edit");
-    private Button removeButton = new Button("Delete");
+    private Button addButton = new Button("Create New Invoice");
     private GridPane mainGrid = new GridPane();
     private InvoiceCreator IC = new InvoiceCreator(InvoiceManager.this);
     private Stage icStage = new Stage();
@@ -160,7 +158,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         // place buttons in pane
         HBox buttonHBox = new HBox(8);
 
-        buttonHBox.getChildren().addAll(addButton, editButton, removeButton);
+        buttonHBox.getChildren().add(addButton);
 
         buttonHBox.setAlignment(Pos.CENTER);
         mBPane.setBottom(buttonHBox);
