@@ -8,8 +8,9 @@ import java.util.*;
 
 public class InvoiceStorage {
     private static final String FILE_PATH = "invoices.txt";
+    private static final Map<String, Broker> savedBrokers = new HashMap<>();
 
-    // save invoices to a file
+    // save invoices to file
     public static void saveInvoices(ArrayList<Invoice> invoices) {
         try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
             output.writeObject(invoices);
@@ -19,6 +20,7 @@ public class InvoiceStorage {
         }
     }
 
+    // load invoices from file
     public static ArrayList<Invoice> loadInvoices() {
         File file = new File(FILE_PATH);
         if (!file.exists())
@@ -31,5 +33,20 @@ public class InvoiceStorage {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    // save a previously used broker
+    public static void saveBroker(Broker broker) {
+        savedBrokers.put(broker.getCompanyName(), broker);
+    }
+
+    // retrieve broker if already exists
+    public static Broker getBroker(String companyName) {
+        return savedBrokers.get(companyName);
+    }
+
+    // get String array of all saved broker names
+    public static String[] getSavedBrokerNames() {
+        return savedBrokers.keySet().toArray(new String[0]); // automatically created array of correct size
     }
 }
