@@ -1,5 +1,6 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -46,6 +47,8 @@ public class InvoiceCreator extends Pane {
     private final Label otbCostLabel = new Label("OTB Cost: ");
     private final Label netLabel = new Label("Net: ");
     private final Label lumperFeeLabel = new Label("Lumper Fee: ");
+    private final Label dispatchedFeeLabel = new Label("Dispatch Fee: ");
+    private final Label factoredFeeLabel = new Label("Factor Fee: ");
     private TextField rkNumberTF = new TextField();
     private TextField otbNumberTF = new TextField();
     private TextField brokerCompanyNameTF = new TextField();
@@ -81,6 +84,8 @@ public class InvoiceCreator extends Pane {
     private TextField otbCostTF = new TextField();
     private TextField netTF = new TextField();
     private TextField lumperFeeTF = new TextField("0");
+    private TextField dispatchedFeeTF = new TextField("0");
+    private TextField factoredFeeTF = new TextField("0");
 
     private ComboBox<String> rkNumberSuffix = new ComboBox<>();
 
@@ -91,6 +96,10 @@ public class InvoiceCreator extends Pane {
     private ComboBox<String> receiverDropdown = new ComboBox<>();
 
     private CheckBox lumperFeeCheckbox = new CheckBox();
+    private CheckBox dispatchedFeeCheckbox = new CheckBox();
+    private CheckBox factoredFeeCheckbox = new CheckBox();
+
+    private Label netPayLabel = new Label("");
 
     private GridPane gridPane = new GridPane();
 
@@ -201,9 +210,20 @@ public class InvoiceCreator extends Pane {
         rkNumberSuffix.setOnAction(e -> updateFormBasedOnSuffix());
 
         // modify fees
+        // lumper
         lumperFeeCheckbox.setSelected(false);
         lumperFeeTF.setEditable(false);
         lumperFeeTF.setStyle("-fx-background-color: #e0e0e0;"); // gray
+
+        // dispatched
+        dispatchedFeeCheckbox.setSelected(false);
+        dispatchedFeeTF.setEditable(false);
+        dispatchedFeeTF.setStyle("-fx-background-color: #e0e0e0;"); // gray
+
+        // factored
+        factoredFeeCheckbox.setSelected(false);
+        factoredFeeTF.setEditable(false);
+        factoredFeeTF.setStyle("-fx-background-color: #e0e0e0;"); // gray
 
         // allow lumper fee to be entered if checkbox selected
         lumperFeeCheckbox.setOnAction(e -> {
@@ -217,6 +237,32 @@ public class InvoiceCreator extends Pane {
                 lumperFeeTF.setStyle("-fx-background-color: #e0e0e0;"); // gray
             }
                 });
+
+        // allow dispatch fee to be entered if checkbox selected
+        dispatchedFeeCheckbox.setOnAction(e -> {
+            if(dispatchedFeeCheckbox.isSelected()) {
+                dispatchedFeeTF.setEditable(true);
+                dispatchedFeeTF.setStyle("-fx-background-color: white;");
+                dispatchedFeeTF.setText("5");
+            } else {
+                dispatchedFeeTF.setEditable(false);
+                dispatchedFeeTF.setText("0");
+                dispatchedFeeTF.setStyle("-fx-background-color: #e0e0e0;"); // gray
+            }
+        });
+
+        // allow factor fee to be entered if checkbox selected
+        factoredFeeCheckbox.setOnAction(e -> {
+            if(factoredFeeCheckbox.isSelected()) {
+                factoredFeeTF.setEditable(true);
+                factoredFeeTF.setStyle("-fx-background-color: white;");
+                factoredFeeTF.setText("");
+            } else {
+                factoredFeeTF.setEditable(false);
+                factoredFeeTF.setText("0");
+                factoredFeeTF.setStyle("-fx-background-color: #e0e0e0;"); // gray
+            }
+        });
 
         // autofill details when saved field is selected
         // broker autofill
@@ -266,18 +312,36 @@ public class InvoiceCreator extends Pane {
             }
         });
 
+        // listeners for text changes to update net
+        setupListeners();
+
         // create main border pane
         BorderPane borderPane = new BorderPane();
 
         // create grid with required fields
         gridPane.setHgap(10);
+        gridPane.setPrefWidth(350);
+
+        // set column constraints
+        ColumnConstraints labelConstraints = new ColumnConstraints(100);
+        ColumnConstraints textFieldConstraints = new ColumnConstraints(200);
+        ColumnConstraints extraConstraints = new ColumnConstraints(70);
+        labelConstraints.setHalignment(HPos.LEFT);
+        labelConstraints.setHgrow(Priority.NEVER);
+        textFieldConstraints.setHalignment(HPos.LEFT);
+        textFieldConstraints.setHgrow(Priority.NEVER);
+        extraConstraints.setHalignment(HPos.RIGHT);
+        extraConstraints.setHgrow(Priority.NEVER);
+        gridPane.getColumnConstraints().addAll(labelConstraints, textFieldConstraints, extraConstraints);
+
+        // group elements into HBox
+        HBox rkNumberLabelSpacing = new HBox(5, new Label("   "), rkNumberTF);
+        HBox rkNumberHBox = new HBox(5, new Label("-"), rkNumberSuffix);
 
         // add RK Number label, text field and suffix dropdown
         gridPane.add(rkNumberLabel, 0, 0);
-        gridPane.add(rkNumberTF, 1, 0);
-        rkNumberSuffix.setPrefWidth(70);
-        gridPane.add(new Label("-"),  2, 0);
-        gridPane.add(rkNumberSuffix, 3, 0);
+        gridPane.add(rkNumberLabelSpacing, 1, 0);
+        gridPane.add(rkNumberHBox, 2, 0);
 
         /*// add all labels and fields ------------------------
         int row = 0;
@@ -311,14 +375,49 @@ public class InvoiceCreator extends Pane {
         scrollPane.setPrefViewportHeight(500);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
+        // vbox for button and label
+        netPayLabel.setStyle("-fx-font-size: 16px;");
+        VBox bottomElements = new VBox(5, netPayLabel, confirmButton);
+        bottomElements.setAlignment(Pos.CENTER);
+
         // place confirm button
-        borderPane.setBottom(confirmButton);
-        BorderPane.setAlignment(confirmButton, Pos.CENTER);
+        borderPane.setBottom(bottomElements);
 
         borderPane.setCenter(scrollPane);
         this.getChildren().add(borderPane);
 
         handleEntry();
+    }
+
+    // set up event listeners for required text fields
+    private void setupListeners() {
+        grossTF.textProperty().addListener((observable, oldValue, newValue) -> updateNetProfit());
+        lumperFeeTF.textProperty().addListener((observable, oldValue, newValue) -> updateNetProfit());
+        dispatchedFeeTF.textProperty().addListener((observable, oldValue, newValue) -> updateNetProfit());
+        factoredFeeTF.textProperty().addListener((observable, oldValue, newValue) -> updateNetProfit());
+    }
+
+    // consistently update net profit
+    private void updateNetProfit() {
+        try {
+            BigDecimal sum;
+            BigDecimal gross = new BigDecimal(grossTF.getText().isEmpty() ? "0" : grossTF.getText());
+            BigDecimal lumperFee = new BigDecimal(lumperFeeTF.getText().isEmpty() ? "0" : lumperFeeTF.getText());
+            BigDecimal dispatchedFee = new BigDecimal(dispatchedFeeTF.getText().isEmpty() ? "0" : dispatchedFeeTF.getText());
+            BigDecimal factoredFee = new BigDecimal(factoredFeeTF.getText().isEmpty() ? "0" : factoredFeeTF.getText());
+
+            // calculate net profit
+            sum = gross; // first get gross
+            sum = sum.subtract(lumperFee); // second subtract lumper fee
+            sum = sum.subtract(sum.multiply(dispatchedFee.divide(new BigDecimal(100)))); // third subtract dispatch fee
+            sum = sum.subtract(sum.multiply(factoredFee.divide(new BigDecimal(100)))); // fourth subtract factor fee
+
+            BigDecimal netProfit = sum;
+
+            netPayLabel.setText("Net Profit: $" + netProfit);
+        } catch(NumberFormatException e) {
+            netPayLabel.setText("Net Profit: Error");
+        }
     }
 
     private void handleEntry() {
@@ -370,13 +469,26 @@ public class InvoiceCreator extends Pane {
         // receive RK# suffix
         String selectedSuffix = rkNumberSuffix.getValue();
 
+        // modify and group elements into hbox
+        HBox grossHBox = new HBox(5, new Label("$"), grossTF);
+        HBox lumperHBox = new HBox(5, new Label("$"), lumperFeeTF);
+        HBox dispatchHBox = new HBox(5, new Label("   "), dispatchedFeeTF, new Label("%"));
+        HBox factorHBox = new HBox(5, new Label("   "), factoredFeeTF, new Label("%"));
+
         // change form based on suffix
         if(selectedSuffix.equals("M")) {
             gridPane.add(grossLabel, 0, 1);
-            gridPane.add(grossTF, 1, 1);
+            gridPane.add(grossHBox, 1, 1);
+            gridPane.add(new Label(""), 2, 1);
             gridPane.add(lumperFeeLabel, 0, 2);
-            gridPane.add(lumperFeeTF, 1, 2);
+            gridPane.add(lumperHBox, 1, 2);
             gridPane.add(lumperFeeCheckbox, 2, 2);
+            gridPane.add(dispatchedFeeLabel, 0, 3);
+            gridPane.add(dispatchHBox, 1, 3);
+            gridPane.add(dispatchedFeeCheckbox, 2, 3);
+            gridPane.add(factoredFeeLabel, 0, 4);
+            gridPane.add(factorHBox, 1, 4);
+            gridPane.add(factoredFeeCheckbox, 2, 4);
         }
     }
 
