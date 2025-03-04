@@ -81,10 +81,18 @@ public class InvoiceCreator extends Pane {
     private TextField netTF = new TextField();
     private Button confirmButton = new Button("Confirm");
 
-    // create default InvoiceCreator window
+    // constructor for creating a new invoice
     public InvoiceCreator(WindowCloseCallback callback) {
         this.callback = callback;
         createPane();
+    }
+
+    // constructor for editing an existing invoice
+    public InvoiceCreator(WindowCloseCallback callback, Invoice invoice) {
+        this.callback = callback;
+        this.invoice = invoice;
+        createPane();
+        fillFieldsWithInvoiceData();
     }
 
     private void createPane() {
@@ -208,7 +216,7 @@ public class InvoiceCreator extends Pane {
                 Broker broker = new Broker(brokerCompanyNameTF.getText(), brokerAddressTF.getText(), brokerPhoneNumberTF.getText(),
                         brokerReeferTemperatureTF.getText(), brokerEmailTF.getText(), brokerNameTF.getText(), brokerPONumberTF.getText());
                 Shipper shipper = new Shipper(shipperCompanyNameTF.getText(), shipperAddressTF.getText(), shipperPhoneNumberTF.getText(),
-                        shipperReeferTemperatureTF.getText(), shipperDeliveryAddressTF.getText(), shipperPickupDateTimeLabel.getText(),
+                        shipperReeferTemperatureTF.getText(), shipperDeliveryAddressTF.getText(), shipperPickupDateTimeTF.getText(),
                         shipperApproxWeightTF.getText(), shipperConfirmationNumberTF.getText());
                 Receiver receiver = new Receiver(receiverCompanyNameTF.getText(), receiverAddressTF.getText(), receiverPhoneNumberTF.getText(),
                         receiverReeferTemperatureTF.getText(), receiverDeliveryAddressTF.getText(), receiverPickupDateTimeTF.getText(),
@@ -263,6 +271,46 @@ public class InvoiceCreator extends Pane {
 
     public Invoice getInvoice() {
         return invoice;
+    }
+
+    private void fillFieldsWithInvoiceData() {
+        if(invoice != null) {
+            System.out.println(invoice.getRkNumber());
+            rkNumberTF.setText(invoice.getRkNumber());
+            otbNumberTF.setText(invoice.getOtbNumber());
+            brokerCompanyNameTF.setText(invoice.getBroker().getCompanyName());
+            brokerAddressTF.setText(invoice.getBroker().getAddress());
+            brokerPhoneNumberTF.setText(invoice.getBroker().getPhoneNumber());
+            brokerReeferTemperatureTF.setText(invoice.getBroker().getReeferTemperature());
+            brokerEmailTF.setText(invoice.getBroker().getEmail());
+            brokerNameTF.setText(invoice.getBroker().getBrokerName());
+            brokerPONumberTF.setText(invoice.getBroker().getPoNumber());
+            shipperCompanyNameTF.setText(invoice.getShipper().getCompanyName());
+            shipperAddressTF.setText(invoice.getShipper().getAddress());
+            shipperPhoneNumberTF.setText(invoice.getShipper().getPhoneNumber());
+            shipperReeferTemperatureTF.setText(invoice.getShipper().getReeferTemperature());
+            shipperDeliveryAddressTF.setText(invoice.getShipper().getDeliveryAddress());
+            shipperPickupDateTimeTF.setText(invoice.getShipper().getPickupDateTime());
+            shipperApproxWeightTF.setText(invoice.getShipper().getApproximateWeight());
+            shipperConfirmationNumberTF.setText(invoice.getShipper().getConfirmationNumber());
+            receiverCompanyNameTF.setText(invoice.getReceiver().getCompanyName());
+            receiverAddressTF.setText(invoice.getReceiver().getAddress());
+            receiverPhoneNumberTF.setText(invoice.getReceiver().getPhoneNumber());
+            receiverReeferTemperatureTF.setText(invoice.getReceiver().getReeferTemperature());
+            receiverDeliveryAddressTF.setText(invoice.getReceiver().getDeliveryAddress());
+            receiverPickupDateTimeTF.setText(invoice.getReceiver().getPickupDateTime());
+            receiverApproxWeightTF.setText(invoice.getReceiver().getApproximateWeight());
+            receiverPickupNumberTF.setText(invoice.getReceiver().getPickupNumber());
+            grossTF.setText(invoice.getGross().toString());
+            pickupDateTF.setText(invoice.getPickupDate());
+            deliveryDateTF.setText(invoice.getDeliveryDate());
+            factorCostTF.setText(invoice.getFactorCost().toString());
+            factorDateTF.setText(invoice.getFactorDate());
+            factorDueDateTF.setText(invoice.getFactorDueDate());
+            dispatchCostTF.setText(invoice.getDispatchCost().toString());
+            otbCostTF.setText(invoice.getOtbCost().toString());
+            netTF.setText(invoice.getNet().toString());
+        }
     }
 
     @Override
