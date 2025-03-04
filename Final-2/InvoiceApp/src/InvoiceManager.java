@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.rmi.AlreadyBoundException;
 import java.util.ArrayList;
 
 public class InvoiceManager extends Application implements WindowCloseCallback {
@@ -77,6 +78,28 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
                 icStage.setTitle("Invoice Editor");
                 icStage.setScene(new Scene(editIC));
                 icStage.show();
+            }
+        });
+
+        // delete context menu event
+        deleteItem.setOnAction(deleteEvent -> {
+            boolean invoiceExists = false;
+
+            for(int i = 0; i < invoices.size(); i++) {
+                if(invoices.get(i).getRkNumber().equals(selectedInvoice.getRkNumber())) {
+                    invoices.remove(i);
+                    invoiceExists = true;
+                    break;
+                }
+            }
+
+            if(!invoiceExists) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invoice Not Found");
+                alert.setHeaderText(null);
+                alert.setContentText("Selected invoice could not be found.");
+
+                alert.showAndWait();
             }
         });
 
