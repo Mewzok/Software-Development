@@ -1,10 +1,10 @@
-window expands sideways instead of down lol
-multiple pages? scrollbar?
+add "are you sure" to delete invoice. and test it.
+add frequently used options to field inputs
+multiple pages?
 sort feature?
 search feature?
-expand individual fields to max required to display all text
-add invoice
-edit invoice
 remove invoice
 open necessary windows to read extra data
 check resizing?
+check for RK/OTB numbers with the same number?
+so much debugging.
