@@ -197,15 +197,26 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         Invoice newInvoice = IC.getInvoice();
         Broker broker = newInvoice.getBroker();
         Broker existingBroker = InvoiceStorage.getBroker(broker.getCompanyName());
-
-        boolean invoiceExists = false;
+        Shipper shipper = newInvoice.getShipper();
+        Shipper existingShipper = InvoiceStorage.getShipper(shipper.getCompanyName());
+        Receiver receiver = newInvoice.getReceiver();
+        Receiver existingReceiver = InvoiceStorage.getReceiver(shipper.getCompanyName());
 
          //save broker if new
         if (existingBroker == null || !existingBroker.equals(broker)) {
             InvoiceStorage.saveLogistic(broker);
         }
 
+        if(existingShipper == null || !existingShipper.equals(shipper)) {
+            InvoiceStorage.saveLogistic(shipper);
+        }
+
+        if(existingReceiver == null || !existingReceiver.equals(receiver)) {
+            InvoiceStorage.saveLogistic(receiver);
+        }
+
         // update existing invoice
+        boolean invoiceExists = false;
         for(int i = 0; i < invoices.size(); i++) {
             if(invoices.get(i).getRkNumber().equals(newInvoice.getRkNumber())) {
                 invoices.set(i, newInvoice);

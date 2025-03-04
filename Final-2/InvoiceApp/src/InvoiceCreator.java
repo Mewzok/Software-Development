@@ -177,12 +177,16 @@ public class InvoiceCreator extends Pane {
 
         // load saved fields into dropdowns
         brokerDropdown.getItems().addAll(InvoiceStorage.getSavedBrokerNames());
-        //shipperDropdown.getItems().addAll(InvoiceStorage.getSavedShipperNames());
+        shipperDropdown.getItems().addAll(InvoiceStorage.getSavedShipperNames());
+        receiverDropdown.getItems().addAll(InvoiceStorage.getSavedReceiverNames());
 
         // allow typing in ComboBox
         brokerDropdown.setEditable(true);
+        shipperDropdown.setEditable(true);
+        receiverDropdown.setEditable(true);
 
         // autofill details when saved field is selected
+        // broker autofill
         brokerDropdown.setOnAction(e -> {
             String selectedBroker = brokerDropdown.getValue();
             Broker broker = InvoiceStorage.getBroker(selectedBroker);
@@ -194,6 +198,38 @@ public class InvoiceCreator extends Pane {
                 brokerEmailTF.setText(broker.getEmail());
                 brokerNameTF.setText(broker.getBrokerName());
                 brokerPONumberTF.setText(broker.getPoNumber());
+            }
+        });
+
+        // shipper autofill
+        shipperDropdown.setOnAction(e -> {
+            String selectedShipper = shipperDropdown.getValue();
+            Shipper shipper = InvoiceStorage.getShipper(selectedShipper);
+            if(shipper != null) {
+                shipperCompanyNameTF.setText(shipper.getCompanyName());
+                shipperAddressTF.setText(shipper.getAddress());
+                shipperPhoneNumberTF.setText(shipper.getPhoneNumber());
+                shipperReeferTemperatureTF.setText(shipper.getReeferTemperature());
+                shipperDeliveryAddressTF.setText(shipper.getDeliveryAddress());
+                shipperPickupDateTimeTF.setText(shipper.getPickupDateTime());
+                shipperApproxWeightTF.setText(shipper.getApproximateWeight());
+                shipperConfirmationNumberTF.setText(shipper.getConfirmationNumber());
+            }
+        });
+
+        // receiver autofill
+        receiverDropdown.setOnAction(e -> {
+            String selectedReceiver = receiverDropdown.getValue();
+            Receiver receiver = InvoiceStorage.getReceiver(selectedReceiver);
+            if(receiver != null) {
+                receiverCompanyNameTF.setText(receiver.getCompanyName());
+                receiverAddressTF.setText(receiver.getAddress());
+                receiverPhoneNumberTF.setText(receiver.getPhoneNumber());
+                receiverReeferTemperatureTF.setText(receiver.getReeferTemperature());
+                receiverDeliveryAddressTF.setText(receiver.getDeliveryAddress());
+                receiverPickupDateTimeTF.setText(receiver.getPickupDateTime());
+                receiverApproxWeightTF.setText(receiver.getApproximateWeight());
+                receiverPickupNumberTF.setText(receiver.getPickupNumber());
             }
         });
 
@@ -212,13 +248,14 @@ public class InvoiceCreator extends Pane {
             if(label.getText().equals("Broker Company Name: ")) {
                 gridPane.add(brokerDropdown, 1, row);
             }
+            if(label.getText().equals("Shipper Company Name: ")) {
+                gridPane.add(shipperDropdown, 1, row);
+            }
+            if(label.getText().equals("Receiver Company Name: ")) {
+                gridPane.add(receiverDropdown, 1, row);
+            }
             row++;
         }
-
-        //add dropdown elements to pane
-        //gridPane.add(brokerDropdown, 1, 1);
-                /*brokerCompanyNameTF, brokerAddressTF, brokerPhoneNumberTF,
-                brokerReeferTemperatureTF, brokerEmailTF, brokerNameTF, brokerPONumberTF); */
 
         // wrap in vbox so scrolling actually works
         VBox vBox = new VBox(gridPane);
@@ -319,7 +356,7 @@ public class InvoiceCreator extends Pane {
             brokerEmailTF.setText(invoice.getBroker().getEmail());
             brokerNameTF.setText(invoice.getBroker().getBrokerName());
             brokerPONumberTF.setText(invoice.getBroker().getPoNumber());
-            shipperCompanyNameTF.setText(invoice.getShipper().getCompanyName());
+            shipperDropdown.setValue(invoice.getShipper().getCompanyName());
             shipperAddressTF.setText(invoice.getShipper().getAddress());
             shipperPhoneNumberTF.setText(invoice.getShipper().getPhoneNumber());
             shipperReeferTemperatureTF.setText(invoice.getShipper().getReeferTemperature());
@@ -327,7 +364,7 @@ public class InvoiceCreator extends Pane {
             shipperPickupDateTimeTF.setText(invoice.getShipper().getPickupDateTime());
             shipperApproxWeightTF.setText(invoice.getShipper().getApproximateWeight());
             shipperConfirmationNumberTF.setText(invoice.getShipper().getConfirmationNumber());
-            receiverCompanyNameTF.setText(invoice.getReceiver().getCompanyName());
+            receiverDropdown.setValue(invoice.getReceiver().getCompanyName());
             receiverAddressTF.setText(invoice.getReceiver().getAddress());
             receiverPhoneNumberTF.setText(invoice.getReceiver().getPhoneNumber());
             receiverReeferTemperatureTF.setText(invoice.getReceiver().getReeferTemperature());
@@ -345,14 +382,5 @@ public class InvoiceCreator extends Pane {
             otbCostTF.setText(invoice.getOtbCost().toString());
             netTF.setText(invoice.getNet().toString());
         }
-    }
-
-    @Override
-    public void setWidth(double width) {
-        super.setWidth(width);
-    }
-
-    public void setHeight(double height) {
-        super.setHeight(height);
     }
 }
