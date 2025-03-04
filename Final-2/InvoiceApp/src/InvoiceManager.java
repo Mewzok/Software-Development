@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import java.rmi.AlreadyBoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class InvoiceManager extends Application implements WindowCloseCallback {
     ArrayList<Invoice> invoices = new ArrayList<>();
@@ -42,6 +43,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         placeHeadersInRow();
 
         invoices = InvoiceStorage.loadInvoices();
+        InvoiceStorage.loadLogisticsFromFile(); // place logistics data in internal map
 
         loadInvoicesToGrid();
 
@@ -59,6 +61,8 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
                 }
 
                 // open invoice creator window
+                IC = new InvoiceCreator(InvoiceManager.this);
+                icStage = new Stage();
                 icStage.setTitle("Invoice Creator");
                 icStage.setScene(new Scene(IC));
                 icStage.show();
@@ -74,9 +78,10 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
                 }
 
                 // open invoice editor window
-                InvoiceCreator editIC = new InvoiceCreator(InvoiceManager.this, selectedInvoice);
+                IC = new InvoiceCreator(InvoiceManager.this, selectedInvoice);
+                icStage = new Stage();
                 icStage.setTitle("Invoice Editor");
-                icStage.setScene(new Scene(editIC));
+                icStage.setScene(new Scene(IC));
                 icStage.show();
             }
         });
@@ -190,8 +195,15 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     @Override
     public void onCloseWindow() {
         Invoice newInvoice = IC.getInvoice();
+        Broker broker = newInvoice.getBroker();
+        Broker existingBroker = InvoiceStorage.getBroker(broker.getCompanyName());
 
         boolean invoiceExists = false;
+
+         //save broker if new
+        if (existingBroker == null || !existingBroker.equals(broker)) {
+            InvoiceStorage.saveLogistic(broker);
+        }
 
         // update existing invoice
         for(int i = 0; i < invoices.size(); i++) {

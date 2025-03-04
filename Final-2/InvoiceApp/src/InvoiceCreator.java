@@ -79,7 +79,12 @@ public class InvoiceCreator extends Pane {
     private TextField dispatchCostTF = new TextField();
     private TextField otbCostTF = new TextField();
     private TextField netTF = new TextField();
+
     private Button confirmButton = new Button("Confirm");
+
+    private ComboBox<String> brokerDropdown = new ComboBox<>();
+    private ComboBox<String> shipperDropdown = new ComboBox<>();
+    private ComboBox<String> receiverDropdown = new ComboBox<>();
 
     // constructor for creating a new invoice
     public InvoiceCreator(WindowCloseCallback callback) {
@@ -170,6 +175,28 @@ public class InvoiceCreator extends Pane {
         textFields.add(otbCostTF);
         textFields.add(netTF);
 
+        // load saved fields into dropdowns
+        brokerDropdown.getItems().addAll(InvoiceStorage.getSavedBrokerNames());
+        //shipperDropdown.getItems().addAll(InvoiceStorage.getSavedShipperNames());
+
+        // allow typing in ComboBox
+        brokerDropdown.setEditable(true);
+
+        // autofill details when saved field is selected
+        brokerDropdown.setOnAction(e -> {
+            String selectedBroker = brokerDropdown.getValue();
+            Broker broker = InvoiceStorage.getBroker(selectedBroker);
+            if(broker != null) {
+                brokerCompanyNameTF.setText(broker.getCompanyName());
+                brokerAddressTF.setText(broker.getAddress());
+                brokerPhoneNumberTF.setText(broker.getPhoneNumber());
+                brokerReeferTemperatureTF.setText(broker.getReeferTemperature());
+                brokerEmailTF.setText(broker.getEmail());
+                brokerNameTF.setText(broker.getBrokerName());
+                brokerPONumberTF.setText(broker.getPoNumber());
+            }
+        });
+
         // create main border pane
         BorderPane borderPane = new BorderPane();
 
@@ -182,8 +209,16 @@ public class InvoiceCreator extends Pane {
         for(Label label : labels) {
             gridPane.add(label, 0, row);
             gridPane.add(textFields.get(row), 1, row);
+            if(label.getText().equals("Broker Company Name: ")) {
+                gridPane.add(brokerDropdown, 1, row);
+            }
             row++;
         }
+
+        //add dropdown elements to pane
+        //gridPane.add(brokerDropdown, 1, 1);
+                /*brokerCompanyNameTF, brokerAddressTF, brokerPhoneNumberTF,
+                brokerReeferTemperatureTF, brokerEmailTF, brokerNameTF, brokerPONumberTF); */
 
         // wrap in vbox so scrolling actually works
         VBox vBox = new VBox(gridPane);
@@ -275,10 +310,9 @@ public class InvoiceCreator extends Pane {
 
     private void fillFieldsWithInvoiceData() {
         if(invoice != null) {
-            System.out.println(invoice.getRkNumber());
             rkNumberTF.setText(invoice.getRkNumber());
             otbNumberTF.setText(invoice.getOtbNumber());
-            brokerCompanyNameTF.setText(invoice.getBroker().getCompanyName());
+            brokerDropdown.setValue(invoice.getBroker().getCompanyName());
             brokerAddressTF.setText(invoice.getBroker().getAddress());
             brokerPhoneNumberTF.setText(invoice.getBroker().getPhoneNumber());
             brokerReeferTemperatureTF.setText(invoice.getBroker().getReeferTemperature());
