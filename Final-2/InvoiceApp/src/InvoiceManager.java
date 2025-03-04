@@ -88,17 +88,23 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         // delete context menu event
         deleteItem.setOnAction(deleteEvent -> {
-            boolean invoiceExists = false;
+            boolean invoiceFound = false;
 
             for(int i = 0; i < invoices.size(); i++) {
                 if(invoices.get(i).getRkNumber().equals(selectedInvoice.getRkNumber())) {
+                    invoiceFound = true;
                     invoices.remove(i);
-                    invoiceExists = true;
+
+                    // reset ui
+                    InvoiceStorage.saveInvoices(invoices);
+                    loadInvoicesToGrid();
+
                     break;
                 }
             }
 
-            if(!invoiceExists) {
+            // only runs if invoice not found
+            if(!invoiceFound) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Invoice Not Found");
                 alert.setHeaderText(null);
@@ -172,10 +178,14 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     }
 
     private void loadInvoicesToGrid() {
-        // declare variables
-        int rowIndex = 1;
+        // clear pane entirely
+        mainGrid.getChildren().clear();
+
+        // load header to grid
+        placeHeadersInRow();
 
         // add all invoices to main grid
+        int rowIndex = 1;
         for (Invoice invoice : invoices) {
             addInvoiceToGrid(invoice, rowIndex);
             rowIndex++;

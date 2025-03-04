@@ -45,6 +45,7 @@ public class InvoiceCreator extends Pane {
     private final Label dispatchCostLabel = new Label("Dispatch Cost: ");
     private final Label otbCostLabel = new Label("OTB Cost: ");
     private final Label netLabel = new Label("Net: ");
+    private final Label lumperFeeLabel = new Label("Lumper Fee: ");
     private TextField rkNumberTF = new TextField();
     private TextField otbNumberTF = new TextField();
     private TextField brokerCompanyNameTF = new TextField();
@@ -79,12 +80,19 @@ public class InvoiceCreator extends Pane {
     private TextField dispatchCostTF = new TextField();
     private TextField otbCostTF = new TextField();
     private TextField netTF = new TextField();
+    private TextField lumperFeeTF = new TextField("0");
+
+    private ComboBox<String> rkNumberSuffix = new ComboBox<>();
 
     private Button confirmButton = new Button("Confirm");
 
     private ComboBox<String> brokerDropdown = new ComboBox<>();
     private ComboBox<String> shipperDropdown = new ComboBox<>();
     private ComboBox<String> receiverDropdown = new ComboBox<>();
+
+    private CheckBox lumperFeeCheckbox = new CheckBox();
+
+    private GridPane gridPane = new GridPane();
 
     // constructor for creating a new invoice
     public InvoiceCreator(WindowCloseCallback callback) {
@@ -175,15 +183,40 @@ public class InvoiceCreator extends Pane {
         textFields.add(otbCostTF);
         textFields.add(netTF);
 
+        // load suffix dropdown
+        rkNumberSuffix.getItems().addAll("M", "D");
+
         // load saved fields into dropdowns
         brokerDropdown.getItems().addAll(InvoiceStorage.getSavedBrokerNames());
         shipperDropdown.getItems().addAll(InvoiceStorage.getSavedShipperNames());
         receiverDropdown.getItems().addAll(InvoiceStorage.getSavedReceiverNames());
 
-        // allow typing in ComboBox
+        // allow typing in ComboBoxes
+        rkNumberSuffix.setEditable(true);
         brokerDropdown.setEditable(true);
         shipperDropdown.setEditable(true);
         receiverDropdown.setEditable(true);
+
+        // listen to changes in RK# dropdown
+        rkNumberSuffix.setOnAction(e -> updateFormBasedOnSuffix());
+
+        // modify fees
+        lumperFeeCheckbox.setSelected(false);
+        lumperFeeTF.setEditable(false);
+        lumperFeeTF.setStyle("-fx-background-color: #e0e0e0;"); // gray
+
+        // allow lumper fee to be entered if checkbox selected
+        lumperFeeCheckbox.setOnAction(e -> {
+            if(lumperFeeCheckbox.isSelected()) {
+                lumperFeeTF.setEditable(true);
+                lumperFeeTF.setStyle("-fx-background-color: white;");
+                lumperFeeTF.setText("");
+            } else {
+                lumperFeeTF.setEditable(false);
+                lumperFeeTF.setText("0");
+                lumperFeeTF.setStyle("-fx-background-color: #e0e0e0;"); // gray
+            }
+                });
 
         // autofill details when saved field is selected
         // broker autofill
@@ -237,14 +270,23 @@ public class InvoiceCreator extends Pane {
         BorderPane borderPane = new BorderPane();
 
         // create grid with required fields
-        GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
 
-        // add labels and fields
+        // add RK Number label, text field and suffix dropdown
+        gridPane.add(rkNumberLabel, 0, 0);
+        gridPane.add(rkNumberTF, 1, 0);
+        rkNumberSuffix.setPrefWidth(70);
+        gridPane.add(new Label("-"),  2, 0);
+        gridPane.add(rkNumberSuffix, 3, 0);
+
+        /*// add all labels and fields ------------------------
         int row = 0;
         for(Label label : labels) {
             gridPane.add(label, 0, row);
             gridPane.add(textFields.get(row), 1, row);
+            if(label.getText().equals("RK#")) {
+                gridPane.add(rkNumberSuffix, 2, 0);
+            }
             if(label.getText().equals("Broker Company Name: ")) {
                 gridPane.add(brokerDropdown, 1, row);
             }
@@ -255,7 +297,7 @@ public class InvoiceCreator extends Pane {
                 gridPane.add(receiverDropdown, 1, row);
             }
             row++;
-        }
+        }*/
 
         // wrap in vbox so scrolling actually works
         VBox vBox = new VBox(gridPane);
@@ -322,6 +364,20 @@ public class InvoiceCreator extends Pane {
                 }
             }
         });
+    }
+
+    private void updateFormBasedOnSuffix() {
+        // receive RK# suffix
+        String selectedSuffix = rkNumberSuffix.getValue();
+
+        // change form based on suffix
+        if(selectedSuffix.equals("M")) {
+            gridPane.add(grossLabel, 0, 1);
+            gridPane.add(grossTF, 1, 1);
+            gridPane.add(lumperFeeLabel, 0, 2);
+            gridPane.add(lumperFeeTF, 1, 2);
+            gridPane.add(lumperFeeCheckbox, 2, 2);
+        }
     }
 
     private BigDecimal bigDecimalConversion(TextField tf, String fieldType) {
