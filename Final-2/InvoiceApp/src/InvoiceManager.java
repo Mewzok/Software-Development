@@ -3,9 +3,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -19,6 +17,8 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     private GridPane mainGrid = new GridPane();
     private InvoiceCreator IC = new InvoiceCreator(InvoiceManager.this);
     private Stage icStage = new Stage();
+    private ContextMenu contextMenu = new ContextMenu();
+    private Invoice selectedInvoice;
 
     @Override
     public void start(Stage primaryStage) {
@@ -34,6 +34,11 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         scrollPane.setFitToWidth(true);
         mainBorderPane.setCenter(scrollPane);
 
+        // create context menu
+        MenuItem editItem = new MenuItem("Edit");
+        MenuItem deleteItem = new MenuItem("Delete");
+        contextMenu.getItems().addAll(editItem, deleteItem);
+
         // place headers in first row, also determine size of each column
         placeHeadersInRow();
 
@@ -43,16 +48,36 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         addButtonsToPane(mainBorderPane);
 
-        // delete
-        //mainBorderPane.setCenter(mainGrid);
 
-        // handle button events
-        // add event
+        // handle events
+        // add button event
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                // close the old window if it's open
+                if(icStage.isShowing()) {
+                    icStage.close();
+                }
+
+                // open invoice creator window
                 icStage.setTitle("Invoice Creator");
                 icStage.setScene(new Scene(IC));
+                icStage.show();
+            }
+        });
+
+        // edit context menu event
+        editItem.setOnAction(editEvent -> {
+            if(selectedInvoice != null) {
+                // close the old window if it's open
+                if(icStage.isShowing()) {
+                    icStage.close();
+                }
+
+                // open invoice editor window
+                InvoiceCreator editIC = new InvoiceCreator(InvoiceManager.this, selectedInvoice);
+                icStage.setTitle("Invoice Editor");
+                icStage.setScene(new Scene(editIC));
                 icStage.show();
             }
         });
@@ -108,7 +133,10 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             mainGrid.add(cell, col, row);
 
             // attach event listener for cell editing
-            enableCellEditing(cell, col, row);
+            cell.setOnContextMenuRequested(e -> {
+                selectedInvoice = inv; // store selected invoice
+                contextMenu.show(cell, e.getScreenX(), e.getScreenY());
+            });
 
             // set grid size per cell
             ColumnConstraints columnConstraints = new ColumnConstraints();
@@ -138,25 +166,31 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         mBPane.setBottom(buttonHBox);
     }
 
-    private void enableCellEditing(StackPane cell, int colIndex, int rowIndex) {
-        cell.setOnMouseClicked(e -> {
-            Invoice selectedInvoice = invoices.get(rowIndex);
-            System.out.println(selectedInvoice);
-        });
-    }
-
     @Override
     public void onCloseWindow() {
         Invoice newInvoice = IC.getInvoice();
 
-        System.out.println(newInvoice.isValidInvoice());
-        System.out.println(newInvoice.getDispatchCost());
+        boolean invoiceExists = false;
 
-        invoices.add(newInvoice);
+        // update existing invoice
+        for(int i = 0; i < invoices.size(); i++) {
+            if(invoices.get(i).getRkNumber().equals(newInvoice.getRkNumber())) {
+                invoices.set(i, newInvoice);
+                invoiceExists = true;
+                break;
+            }
+        }
 
+        // add new invoice if it doesn't exist already
+        if(!invoiceExists) {
+            invoices.add(newInvoice);
+        }
+
+        // save new or updated invoice
         InvoiceStorage.saveInvoices(invoices);
         icStage.close();
 
+        // refresh grid
         loadInvoicesToGrid();
     }
 
