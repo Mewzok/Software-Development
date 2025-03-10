@@ -7,6 +7,7 @@ import javafx.scene.layout.*;
 import javafx.util.Pair;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.*;
 
 public class InvoiceCreator extends Pane {
@@ -180,7 +181,7 @@ public class InvoiceCreator extends Pane {
         formFields.add(new Pair<>(receiverApproxWeightLabel, receiverApproximateWeightHBox));
         formFields.add(new Pair<>(receiverPickupNumberLabel, receiverPickupNumberHBox));
         formFields.add(new Pair<>(grossLabel, grossHBox));
-        formFields.add(new Pair<>(lumperFeeLabel, lumperHBox));  // ✅ Added missing Lumper Fee label
+        formFields.add(new Pair<>(lumperFeeLabel, lumperHBox));
         formFields.add(new Pair<>(pickupDateLabel, pickupDateHBox));
         formFields.add(new Pair<>(deliveryDateLabel, deliveryDateHBox));
         formFields.add(new Pair<>(factoredFeeLabel, factorHBox));
@@ -376,6 +377,8 @@ public class InvoiceCreator extends Pane {
 
     // consistently update net profit
     private void updateNetProfit() {
+        NumberFormat dollarFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+
         try {
             BigDecimal sum;
             BigDecimal gross = new BigDecimal(grossTF.getText().isEmpty() ? "0" : grossTF.getText());
@@ -388,11 +391,13 @@ public class InvoiceCreator extends Pane {
             sum = sum.add(lumperFee); // second add lumper fee
             BigDecimal dispatcherNetProfit = sum.multiply(dispatchedFee.divide(new BigDecimal(100))); // get dispatcher profit
             sum = sum.subtract(dispatcherNetProfit); // third subtract dispatch fee
-            sum = sum.subtract(sum.multiply(factoredFee.divide(new BigDecimal(100)))); // fourth subtract factor fee
+            BigDecimal netProfit = sum.subtract(sum.multiply(factoredFee.divide(new BigDecimal(100)))); // fourth subtract factor fee
 
-            BigDecimal netProfit = sum;
+            // convert to US dollars
+            String netFormatted = dollarFormatter.format(netProfit);
 
-            rkNetPayLabel.setText("Net Profit: $" + netProfit);
+            rkNetPayLabel.setText("Net Profit: " + netFormatted);
+            netTF.setText(netFormatted);
             dispatcherNetPayLabel.setText("Dispatcher cost: $" + dispatcherNetProfit);
         } catch(NumberFormatException e) {
             rkNetPayLabel.setText("Net Profit: Error");
@@ -419,7 +424,14 @@ public class InvoiceCreator extends Pane {
                 BigDecimal factorCostDecimal = bigDecimalConversion(factoredFeeTF, "factor cost");
                 BigDecimal dispatchCostDecimal = bigDecimalConversion(dispatchedFeeTF, "dispatch cost");
                 BigDecimal otbCostDecimal = bigDecimalConversion(otbCostTF, "OTB cost");
-                BigDecimal netDecimal = bigDecimalConversion(netTF, "net");
+
+                // format numbers to US dollars
+                NumberFormat dollarFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+                String grossDollars = dollarFormatter.format(grossDecimal);
+                String factorCostDollars = dollarFormatter.format(factorCostDecimal);
+                String dispatchCostDollars = dollarFormatter.format(dispatchCostDecimal);
+                String otbCostDollars = dollarFormatter.format(otbCostDecimal);
+
 
                 // check for valid values before creating invoice
                 if(invoice.isValidInvoice()) {
@@ -428,15 +440,15 @@ public class InvoiceCreator extends Pane {
                     invoice.setBroker(broker);
                     invoice.setShipper(shipper);
                     invoice.setReceiver(receiver);
-                    invoice.setGross(grossDecimal);
+                    invoice.setGross(grossDollars);
                     invoice.setPickupDate(pickupDateTF.getText());
                     invoice.setDeliveryDate(deliveryDateTF.getText());
-                    invoice.setFactorCost(factorCostDecimal);
+                    invoice.setFactorCost(factorCostDollars);
                     invoice.setFactorDate(factorDateTF.getText());
                     invoice.setFactorDueDate(factorDueDateTF.getText());
-                    invoice.setDispatchCost(dispatchCostDecimal);
-                    invoice.setOtbCost(otbCostDecimal);
-                    invoice.setNet(netDecimal);
+                    invoice.setDispatchCost(dispatchCostDollars);
+                    invoice.setOtbCost(otbCostDollars);
+                    invoice.setNet(netTF.getText());
 
                     callback.onCloseWindow();
                 }
@@ -456,8 +468,10 @@ public class InvoiceCreator extends Pane {
         for(Pair<Label, HBox> entry : formFields) {
             // change form based on suffix
             if(selectedSuffix.equals("M")) {
+                otbNumberTF.setText("N/A");
+                otbCostTF.setText("0");
+
                 if(entry.getKey().getText().equals("OTB#: ") ||
-                entry.getKey().getText().equals("Factor Cost: ") ||
                 entry.getKey().getText().equals("OTB Cost: ")) {
                     continue;
                 }
@@ -507,8 +521,10 @@ public class InvoiceCreator extends Pane {
         return invoice;
     }
 
+    // fill form if editing
     private void fillFieldsWithInvoiceData() {
         if(invoice != null) {
+            // format numbers for dollar amounts
             rkNumberTF.setText(invoice.getRkNumber());
             otbNumberTF.setText(invoice.getOtbNumber());
             brokerDropdown.setValue(invoice.getBroker().getCompanyName());
@@ -542,7 +558,7 @@ public class InvoiceCreator extends Pane {
             factorDueDateTF.setText(invoice.getFactorDueDate());
             dispatchedFeeTF.setText(invoice.getDispatchCost().toString());
             otbCostTF.setText(invoice.getOtbCost().toString());
-            netTF.setText(invoice.getNet().toString());
+            netTF.setText(invoice.getNet());
         }
     }
 }

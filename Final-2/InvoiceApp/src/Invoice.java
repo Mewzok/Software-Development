@@ -8,15 +8,15 @@ public class Invoice implements Serializable {
     private Broker broker;
     private Shipper shipper;
     private Receiver receiver;
-    private BigDecimal gross;
+    private String gross;
     private String pickupDate;
     private String deliveryDate;
-    private BigDecimal factorCost;
+    private String factorCost;
     private String factorDate;
     private String factorDueDate;
-    private BigDecimal dispatchCost;
-    private BigDecimal otbCost;
-    private BigDecimal net;
+    private String dispatchCost;
+    private String otbCost;
+    private String net;
     private boolean validInvoice;
 
     public Invoice() {
@@ -25,23 +25,23 @@ public class Invoice implements Serializable {
         this.broker = null;
         this.shipper = null;
         this.receiver = null;
-        this.gross = new BigDecimal(0);
+        this.gross = "0";
         this.pickupDate = "";
         this.deliveryDate = "";
-        this.factorCost = new BigDecimal(0);
+        this.factorCost = "0";
         this.factorDate = "";
         this.factorDueDate = "";
-        this.dispatchCost = new BigDecimal(0);
-        this.otbCost = new BigDecimal(0);
-        this.net = new BigDecimal(0);
+        this.dispatchCost = "0";
+        this.otbCost = "0";
+        this.net = "0";
         this.validInvoice = false;
     };
 
     // all arg constructor
     public Invoice(String rkNumber, String otbNumber, Broker broker, Shipper shipper, Receiver receiver,
-            BigDecimal gross, String pickupDate, String deliveryDate, BigDecimal factorCost, String factorDate,
-            String factorDueDate, BigDecimal dispatchCost,
-            BigDecimal otbCost, BigDecimal net) {
+            String gross, String pickupDate, String deliveryDate, String factorCost, String factorDate,
+            String factorDueDate, String dispatchCost,
+            String otbCost, String net) {
         this.rkNumber = rkNumber;
         this.otbNumber = otbNumber;
         this.broker = broker;
@@ -80,7 +80,7 @@ public class Invoice implements Serializable {
         return receiver;
     }
 
-    public BigDecimal getGross() {
+    public String getGross() {
         return gross;
     }
 
@@ -92,7 +92,7 @@ public class Invoice implements Serializable {
         return deliveryDate;
     }
 
-    public BigDecimal getFactorCost() {
+    public String getFactorCost() {
         return factorCost;
     }
 
@@ -104,15 +104,15 @@ public class Invoice implements Serializable {
         return factorDueDate;
     }
 
-    public BigDecimal getDispatchCost() {
+    public String getDispatchCost() {
         return dispatchCost;
     }
 
-    public BigDecimal getOtbCost() {
+    public String getOtbCost() {
         return otbCost;
     }
 
-    public BigDecimal getNet() {
+    public String getNet() {
         return net;
     }
 
@@ -141,7 +141,7 @@ public class Invoice implements Serializable {
         this.receiver = receiver;
     }
 
-    public void setGross(BigDecimal gross) {
+    public void setGross(String gross) {
         this.gross = gross;
     }
 
@@ -153,7 +153,7 @@ public class Invoice implements Serializable {
         this.deliveryDate = deliveryDate;
     }
 
-    public void setFactorCost(BigDecimal factorCost) {
+    public void setFactorCost(String factorCost) {
         this.factorCost = factorCost;
     }
 
@@ -165,15 +165,15 @@ public class Invoice implements Serializable {
         this.factorDueDate = factorDueDate;
     }
 
-    public void setDispatchCost(BigDecimal dispatchCost) {
+    public void setDispatchCost(String dispatchCost) {
         this.dispatchCost = dispatchCost;
     }
 
-    public void setOtbCost(BigDecimal otbCost) {
+    public void setOtbCost(String otbCost) {
         this.otbCost = otbCost;
     }
 
-    public void setNet(BigDecimal net) {
+    public void setNet(String net) {
         this.net = net;
     }
 
