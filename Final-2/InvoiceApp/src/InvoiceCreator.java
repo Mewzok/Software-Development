@@ -84,16 +84,21 @@ public class InvoiceCreator extends Pane {
     private TextField otbCostTF = new TextField();
     private TextField netTF = new TextField();
 
+    // comboboxes
+    private ComboBox<String> brokerDropdown = new ComboBox<>();
+    private ComboBox<String> shipperDropdown = new ComboBox<>();
+    private ComboBox<String> receiverDropdown = new ComboBox<>();
+
     // modify and group elements into hbox
     private HBox otbNumberHBox = new HBox(5, new Label("   "), otbNumberTF, new Label(""));
-    private HBox brokerCompanyNameHBox = new HBox(5, new Label("   "), brokerCompanyNameTF, new Label(""));
+    private HBox brokerCompanyNameHBox = new HBox(5, new Label("   "), brokerDropdown, new Label(""));
     private HBox brokerAddressHBox = new HBox(5, new Label("   "), brokerAddressTF, new Label(""));
     private HBox brokerPhoneNumberHBox = new HBox(5, new Label("   "), brokerPhoneNumberTF, new Label(""));
     private HBox brokerReeferTempHBox = new HBox(5, new Label("   "), brokerReeferTemperatureTF, new Label(""));
     private HBox brokerEmailHBox = new HBox(5, new Label("   "), brokerEmailTF, new Label(""));
     private HBox brokerNameHBox = new HBox(5, new Label("   "), brokerNameTF, new Label(""));
     private HBox brokerPONumber = new HBox(5, new Label("   "), brokerPONumberTF, new Label(""));
-    private HBox shipperCompanyNameHBox = new HBox(5, new Label("   "), shipperCompanyNameTF, new Label(""));
+    private HBox shipperCompanyNameHBox = new HBox(5, new Label("   "), shipperDropdown, new Label(""));
     private HBox shipperAddressHBox = new HBox(5, new Label("   "), shipperAddressTF, new Label(""));
     private HBox shipperPhoneNumberHBox = new HBox(5, new Label("   "), shipperPhoneNumberTF, new Label(""));
     private HBox shipperReeferTempHBox = new HBox(5, new Label("   "), shipperReeferTemperatureTF, new Label(""));
@@ -101,7 +106,7 @@ public class InvoiceCreator extends Pane {
     private HBox shipperPickupDateTimeHBox = new HBox(5, new Label("   "), shipperPickupDateTimeTF, new Label(""));
     private HBox shipperApproximateWeightHBox = new HBox(5, new Label("   "), shipperApproxWeightTF, new Label(""));
     private HBox shipperConfirmationNumberHBox = new HBox(5, new Label("   "), shipperConfirmationNumberTF, new Label(""));
-    private HBox receiverCompanyNameHBox = new HBox(5, new Label("   "), receiverCompanyNameTF, new Label(""));
+    private HBox receiverCompanyNameHBox = new HBox(5, new Label("   "), receiverDropdown, new Label(""));
     private HBox receiverAddressHBox = new HBox(5, new Label("   "), receiverAddressTF, new Label(""));
     private HBox receiverPhoneNumberHBox = new HBox(5, new Label("   "), receiverPhoneNumberTF, new Label(""));
     private HBox receiverReeferTempHBox = new HBox(5, new Label("   "), receiverReeferTemperatureTF, new Label(""));
@@ -122,10 +127,6 @@ public class InvoiceCreator extends Pane {
     private ComboBox<String> rkNumberSuffix = new ComboBox<>();
 
     private Button confirmButton = new Button("Confirm");
-
-    private ComboBox<String> brokerDropdown = new ComboBox<>();
-    private ComboBox<String> shipperDropdown = new ComboBox<>();
-    private ComboBox<String> receiverDropdown = new ComboBox<>();
 
     private CheckBox lumperFeeCheckbox = new CheckBox();
     private CheckBox dispatchedFeeCheckbox = new CheckBox();
@@ -235,7 +236,7 @@ public class InvoiceCreator extends Pane {
                 lumperFeeTF.setText("0");
                 lumperFeeTF.setStyle("-fx-background-color: #e0e0e0;"); // gray
             }
-                });
+        });
 
         // allow dispatch fee to be entered if checkbox selected
         dispatchedFeeCheckbox.setOnAction(e -> {
@@ -377,8 +378,6 @@ public class InvoiceCreator extends Pane {
 
     // consistently update net profit
     private void updateNetProfit() {
-        NumberFormat dollarFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-
         try {
             BigDecimal sum;
             BigDecimal gross = new BigDecimal(grossTF.getText().isEmpty() ? "0" : grossTF.getText());
@@ -394,7 +393,7 @@ public class InvoiceCreator extends Pane {
             BigDecimal netProfit = sum.subtract(sum.multiply(factoredFee.divide(new BigDecimal(100)))); // fourth subtract factor fee
 
             // convert to US dollars
-            String netFormatted = dollarFormatter.format(netProfit);
+            String netFormatted = DollarConverter.formatToDollars(netProfit);
 
             rkNetPayLabel.setText("Net Profit: " + netFormatted);
             netTF.setText(netFormatted);
@@ -472,7 +471,7 @@ public class InvoiceCreator extends Pane {
                 otbCostTF.setText("0");
 
                 if(entry.getKey().getText().equals("OTB#: ") ||
-                entry.getKey().getText().equals("OTB Cost: ")) {
+                        entry.getKey().getText().equals("OTB Cost: ")) {
                     continue;
                 }
 

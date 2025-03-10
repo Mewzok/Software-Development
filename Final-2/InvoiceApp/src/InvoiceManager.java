@@ -6,12 +6,22 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.converter.BigDecimalStringConverter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class InvoiceManager extends Application implements WindowCloseCallback {
     ArrayList<Invoice> invoices = new ArrayList<>();
     private Button addButton = new Button("Create New Invoice");
+
+    private Label dispatchNetLabel = new Label();
+    private BigDecimal dispatchNetAmount = new BigDecimal(0);
+    private Label otbNetLabel = new Label();
+    private BigDecimal otbNetAmount = new BigDecimal(0);
+    private Label rkNetLabel = new Label();
+    private BigDecimal rkNetAmount = new BigDecimal(0);
+
     private GridPane mainGrid = new GridPane();
     private InvoiceCreator IC = new InvoiceCreator(InvoiceManager.this);
     private Stage icStage = new Stage();
@@ -48,7 +58,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         loadInvoicesToGrid();
 
-        addButtonsToPane(mainBorderPane);
+        addButtonsAndLabelsToPane(mainBorderPane);
 
 
         // handle events
@@ -193,24 +203,59 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         for (Invoice invoice : invoices) {
             addInvoiceToGrid(invoice, rowIndex);
             rowIndex++;
+
+            // add net totals
+            dispatchNetAmount = dispatchNetAmount.add(new BigDecimal(invoice.getDispatchCost().replaceAll("[$,]", "")));
+            otbNetAmount = otbNetAmount.add(new BigDecimal(invoice.getOtbCost().replaceAll("[$,]", "")));
+            rkNetAmount = rkNetAmount.add(new BigDecimal(invoice.getNet().replaceAll("[$,]", "")));
         }
 
+        updateNets();
         refreshSize();
     }
 
-    private void addButtonsToPane(BorderPane mBPane) {
-        // place buttons in pane
-        HBox buttonHBox = new HBox(8);
+    private void addButtonsAndLabelsToPane(BorderPane mBPane) {
+        // customize label UI
+        dispatchNetLabel.setStyle("-fx-border-color: #B0B0B0; -fx-border-width: 1px; -fx-border-radius: 5px; " +
+                "-fx-padding: 5px; -fx-background-radius: 5px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 2, 2);");
 
-        buttonHBox.getChildren().add(addButton);
+        otbNetLabel.setStyle("-fx-border-color: #B0B0B0; -fx-border-width: 1px; -fx-border-radius: 5px; " +
+                "-fx-padding: 5px; -fx-background-radius: 5px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 2, 2);");
 
-        buttonHBox.setAlignment(Pos.CENTER);
-        mBPane.setBottom(buttonHBox);
+        rkNetLabel.setStyle("-fx-border-color: #B0B0B0; -fx-border-width: 1px; -fx-border-radius: 5px; " +
+                "-fx-padding: 5px; -fx-background-radius: 5px; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 2, 2);");
+
+        // set up button and label layout for bottom pane
+        HBox bottomHBox = new HBox(8);
+        HBox labelHBox = new HBox(8);
+
+        labelHBox.getChildren().addAll(dispatchNetLabel, otbNetLabel, rkNetLabel);
+
+        labelHBox.setAlignment(Pos.CENTER);
+        bottomHBox.setAlignment(Pos.CENTER);
+
+        Region spacer = new Region(); // spacer to force button in the middle, labels on the right
+        spacer.setMinWidth(primaryStage.getWidth() * 1.5);
+
+        HBox.setHgrow(labelHBox, Priority.ALWAYS);
+
+        bottomHBox.getChildren().addAll(spacer, addButton, labelHBox);
+
+        mBPane.setBottom(bottomHBox);
     }
 
     private void refreshSize() {
         primaryStage.close();
         primaryStage.show();
+    }
+
+    private void updateNets() {
+        dispatchNetLabel.setText("Dispatcher Total Pay: " + DollarConverter.formatToDollars(dispatchNetAmount));
+        otbNetLabel.setText("OTB Total Pay: " + DollarConverter.formatToDollars(otbNetAmount));
+        rkNetLabel.setText("Net Pay: " + DollarConverter.formatToDollars(rkNetAmount));
     }
 
     @Override
