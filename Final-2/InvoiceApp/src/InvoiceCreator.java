@@ -47,7 +47,6 @@ public class InvoiceCreator extends Pane {
     private final Label factorDateLabel = new Label("Factor Date: ");
     private final Label factorDueDateLabel = new Label("Factor Due Date: ");
     private final Label dispatchedFeeLabel = new Label("Dispatch Fee: ");
-    private final Label otbCostLabel = new Label("OTB Cost: ");
     private TextField rkNumberTF = new TextField();
     private TextField otbNumberTF = new TextField();
     private TextField brokerCompanyNameTF = new TextField();
@@ -123,7 +122,6 @@ public class InvoiceCreator extends Pane {
     private HBox factorDateHBox = new HBox(5, new Label("   "), factorDateTF);
     private HBox factorDueDateHBox = new HBox(5, new Label("   "), factorDueDateTF);
     private HBox dispatchHBox = new HBox(5, new Label("   "), dispatchedFeeTF, new Label("%"));
-    private HBox otbCostHBox = new HBox(5, new Label("$"), otbCostTF, new Label(""));
 
     private ComboBox<String> rkNumberSuffix = new ComboBox<>();
 
@@ -134,13 +132,14 @@ public class InvoiceCreator extends Pane {
     private CheckBox factoredFeeCheckbox = new CheckBox();
 
     private Label rkNetPayLabel = new Label("");
-    private Label otbNetPayLabel = new Label("");
     private Label dispatcherNetPayLabel = new Label("");
 
     List<Pair<Label, HBox>> formFields = new ArrayList<>();
 
     private GridPane gridPane = new GridPane();
     private VBox vBox = new VBox(gridPane);
+
+    private String selectedSuffix = "";
 
     // constructor for creating a new invoice
     public InvoiceCreator(WindowCloseCallback callback) {
@@ -190,7 +189,6 @@ public class InvoiceCreator extends Pane {
         formFields.add(new Pair<>(factorDateLabel, factorDateHBox));
         formFields.add(new Pair<>(factorDueDateLabel, factorDueDateHBox));
         formFields.add(new Pair<>(dispatchedFeeLabel, dispatchHBox));
-        formFields.add(new Pair<>(otbCostLabel, otbCostHBox));
 
 
         // load suffix dropdown
@@ -257,7 +255,11 @@ public class InvoiceCreator extends Pane {
             if(factoredFeeCheckbox.isSelected()) {
                 factoredFeeTF.setEditable(true);
                 factoredFeeTF.setStyle("-fx-background-color: white;");
-                factoredFeeTF.setText("");
+                if(selectedSuffix == "M") {
+                    factoredFeeTF.setText("2.5");
+                } else {
+                    factoredFeeTF.setText("1");
+                }
             } else {
                 factoredFeeTF.setEditable(false);
                 factoredFeeTF.setText("0");
@@ -397,9 +399,14 @@ public class InvoiceCreator extends Pane {
             String netFormatted = DollarConverter.formatToDollars(netProfit);
             String dispatchedFormatted = DollarConverter.formatToDollars(dispatcherNetProfit);
 
-            rkNetPayLabel.setText("Net Profit: " + netFormatted);
+            if(selectedSuffix == "D") {
+                rkNetPayLabel.setText("OTB Net Profit: " + netFormatted);
+                netTF.setText(netFormatted);
+            } else {
+                rkNetPayLabel.setText("Net Profit: " + netFormatted);
+            }
             netTF.setText(netFormatted);
-            dispatcherNetPayLabel.setText("Dispatcher cost: $" + dispatcherNetProfit);
+            dispatcherNetPayLabel.setText("Dispatcher cost: " + dispatchedFormatted);
             dispatchedCostDollarsTF.setText(dispatchedFormatted);
 
         } catch(NumberFormatException e) {
@@ -413,12 +420,12 @@ public class InvoiceCreator extends Pane {
             public void handle(ActionEvent e) {
                 invoice.setValidInvoice(true);
                 // create broker shipper and receiver objects from inputted fields
-                Broker broker = new Broker(brokerCompanyNameTF.getText(), brokerAddressTF.getText(), brokerPhoneNumberTF.getText(),
+                Broker broker = new Broker(brokerDropdown.getValue(), brokerAddressTF.getText(), brokerPhoneNumberTF.getText(),
                         brokerReeferTemperatureTF.getText(), brokerEmailTF.getText(), brokerNameTF.getText(), brokerPONumberTF.getText());
-                Shipper shipper = new Shipper(shipperCompanyNameTF.getText(), shipperAddressTF.getText(), shipperPhoneNumberTF.getText(),
+                Shipper shipper = new Shipper(shipperDropdown.getValue(), shipperAddressTF.getText(), shipperPhoneNumberTF.getText(),
                         shipperReeferTemperatureTF.getText(), shipperDeliveryAddressTF.getText(), shipperPickupDateTimeTF.getText(),
                         shipperApproxWeightTF.getText(), shipperConfirmationNumberTF.getText());
-                Receiver receiver = new Receiver(receiverCompanyNameTF.getText(), receiverAddressTF.getText(), receiverPhoneNumberTF.getText(),
+                Receiver receiver = new Receiver(receiverDropdown.getValue(), receiverAddressTF.getText(), receiverPhoneNumberTF.getText(),
                         receiverReeferTemperatureTF.getText(), receiverDeliveryAddressTF.getText(), receiverPickupDateTimeTF.getText(),
                         receiverApproxWeightTF.getText(), receiverPickupNumberTF.getText());
 
@@ -426,14 +433,12 @@ public class InvoiceCreator extends Pane {
                 BigDecimal grossDecimal = bigDecimalConversion(grossTF, "gross");
                 BigDecimal factorCostDecimal = bigDecimalConversion(factoredFeeTF, "factor cost");
                 BigDecimal dispatchCostDecimal = bigDecimalConversion(dispatchedFeeTF, "dispatch cost");
-                BigDecimal otbCostDecimal = bigDecimalConversion(otbCostTF, "OTB cost");
 
                 // format numbers to US dollars
                 NumberFormat dollarFormatter = NumberFormat.getCurrencyInstance(Locale.US);
                 String grossDollars = dollarFormatter.format(grossDecimal);
                 String factorCostDollars = dollarFormatter.format(factorCostDecimal);
                 String dispatchCostDollars = dollarFormatter.format(dispatchCostDecimal);
-                String otbCostDollars = dollarFormatter.format(otbCostDecimal);
 
 
                 // check for valid values before creating invoice
@@ -451,8 +456,14 @@ public class InvoiceCreator extends Pane {
                     invoice.setFactorDueDate(factorDueDateTF.getText());
                     invoice.setDispatchCostPercent(dispatchCostDollars);
                     invoice.setDispatchPay(dispatchedCostDollarsTF.getText());
-                    invoice.setOtbCost(otbCostDollars);
-                    invoice.setNet(netTF.getText());
+
+                    if(selectedSuffix == "D") {
+                        invoice.setOtbCost(netTF.getText());
+                        invoice.setNet("N/A");
+                    } else {
+                        invoice.setOtbCost("N/A");
+                        invoice.setNet(netTF.getText());
+                    }
 
                     callback.onCloseWindow();
                 }
@@ -462,7 +473,7 @@ public class InvoiceCreator extends Pane {
 
     private void updateFormBasedOnSuffix() {
         // receive RK# suffix
-        String selectedSuffix = rkNumberSuffix.getValue();
+        selectedSuffix = rkNumberSuffix.getValue();
 
         // clear grid before populating
         gridPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) > 0);
@@ -476,10 +487,26 @@ public class InvoiceCreator extends Pane {
                 otbCostTF.setText("0");
 
                 if(entry.getKey().getText().equals("OTB#: ") ||
-                        entry.getKey().getText().equals("OTB Cost: ")) {
+                        entry.getKey().getText().equals("OTB Net: ")) {
                     continue;
                 }
 
+                // add main labels, textboxes and spacing
+                gridPane.add(entry.getKey(), 0, i + 1);
+                gridPane.add(entry.getValue(), 1, i + 1);
+
+                // add checkboxes when necessary
+                if(entry.getKey().getText().equals("Lumper Cost: ")) {
+                    gridPane.add(lumperFeeCheckbox, 2, i + 1);
+                } else if(entry.getKey().getText().equals("Factor Fee: ")) {
+                    gridPane.add(factoredFeeCheckbox, 2, i + 1);
+                } else if(entry.getKey().getText().equals("Dispatch Fee: ")) {
+                    gridPane.add(dispatchedFeeCheckbox, 2, i + 1);
+                } else {
+                    gridPane.add(new Label(""), 2, i + 1);
+                }
+                i++;
+            } else {
                 // add main labels, textboxes and spacing
                 gridPane.add(entry.getKey(), 0, i + 1);
                 gridPane.add(entry.getValue(), 1, i + 1);
