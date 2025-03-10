@@ -7,9 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.rmi.AlreadyBoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class InvoiceManager extends Application implements WindowCloseCallback {
     ArrayList<Invoice> invoices = new ArrayList<>();
@@ -19,9 +17,12 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     private Stage icStage = new Stage();
     private ContextMenu contextMenu = new ContextMenu();
     private Invoice selectedInvoice;
+    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+
         // create main pane
         BorderPane mainBorderPane = new BorderPane();
 
@@ -136,7 +137,15 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             StackPane cell = new StackPane(new Label(headers[col]));
             cell.setStyle("-fx-border-color: black; -fx-padding: 5; -fx-background-color: lightgray;");
             mainGrid.add(cell, col, 0);
+
+            // set grid size per cell
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setHgrow(Priority.ALWAYS);
+            columnConstraints.setMaxWidth(Double.MAX_VALUE);
+            mainGrid.getColumnConstraints().add(columnConstraints);
         }
+
+
     }
 
     private void addInvoiceToGrid(Invoice inv, int row) {
@@ -169,11 +178,6 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
                 selectedInvoice = inv; // store selected invoice
                 contextMenu.show(cell, e.getScreenX(), e.getScreenY());
             });
-
-            // set grid size per cell
-            ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setHgrow(Priority.ALWAYS);
-            mainGrid.getColumnConstraints().add(columnConstraints);
         }
     }
 
@@ -190,6 +194,10 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             addInvoiceToGrid(invoice, rowIndex);
             rowIndex++;
         }
+
+        mainGrid.layout();
+        primaryStage.setWidth(mainGrid.getWidth() + 50);
+        primaryStage.setHeight(700);
     }
 
     private void addButtonsToPane(BorderPane mBPane) {
