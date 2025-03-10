@@ -17,7 +17,21 @@ public class DollarConverter {
             alert.setContentText(number + " could not be converted to dollar amount.");
 
             alert.showAndWait();
-            return null;
+            return "";
+        }
+    }
+
+    public static BigDecimal formatFromDollars(String number) {
+        try {
+            return new BigDecimal(number.replaceAll("[$,]", ""));
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText(number + " could not be converted to a number.");
+
+            alert.showAndWait();
+            return new BigDecimal(0);
         }
     }
 }
