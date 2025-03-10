@@ -4,6 +4,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.util.Pair;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -133,9 +134,7 @@ public class InvoiceCreator extends Pane {
     private Label otbNetPayLabel = new Label("");
     private Label dispatcherNetPayLabel = new Label("");
 
-    private List<Label> labels = new ArrayList<>();
-    private List<HBox> hBoxes = new ArrayList<>();
-    private List<TextField> textFields = new ArrayList<>();
+    List<Pair<Label, HBox>> formFields = new ArrayList<>();
 
     private GridPane gridPane = new GridPane();
     private VBox vBox = new VBox(gridPane);
@@ -155,109 +154,41 @@ public class InvoiceCreator extends Pane {
     }
 
     private void createPane() {
-        // add labels to arraylist for easy iteration
-        labels.add(otbNumberLabel);
-        labels.add(brokerCompanyNameLabel);
-        labels.add(brokerAddressLabel);
-        labels.add(brokerPhoneNumberLabel);
-        labels.add(brokerReeferTemperatureLabel);
-        labels.add(brokerEmailLabel);
-        labels.add(brokerNameLabel);
-        labels.add(brokerPONumberLabel);
-        labels.add(shipperCompanyNameLabel);
-        labels.add(shipperAddressLabel);
-        labels.add(shipperPhoneNumberLabel);
-        labels.add(shipperReeferTemperatureLabel);
-        labels.add(shipperDeliveryAddressLabel);
-        labels.add(shipperPickupDateTimeLabel);
-        labels.add(shipperApproxWeightLabel);
-        labels.add(shipperConfirmationNumberLabel);
-        labels.add(receiverCompanyNameLabel);
-        labels.add(receiverAddressLabel);
-        labels.add(receiverPhoneNumberLabel);
-        labels.add(receiverReeferTemperatureLabel);
-        labels.add(receiverDeliveryAddressLabel);
-        labels.add(receiverPickupDateTimeLabel);
-        labels.add(receiverApproxWeightLabel);
-        labels.add(receiverPickupNumberLabel);
-        labels.add(grossLabel);
-        labels.add(pickupDateLabel);
-        labels.add(deliveryDateLabel);
-        labels.add(factoredFeeLabel);
-        labels.add(factorDateLabel);
-        labels.add(factorDueDateLabel);
-        labels.add(dispatchedFeeLabel);
-        labels.add(otbCostLabel);
+        // add fields to list pair for easy iteration
+        formFields.add(new Pair<>(otbNumberLabel, otbNumberHBox));
+        formFields.add(new Pair<>(brokerCompanyNameLabel, brokerCompanyNameHBox));
+        formFields.add(new Pair<>(brokerAddressLabel, brokerAddressHBox));
+        formFields.add(new Pair<>(brokerPhoneNumberLabel, brokerPhoneNumberHBox));
+        formFields.add(new Pair<>(brokerReeferTemperatureLabel, brokerReeferTempHBox));
+        formFields.add(new Pair<>(brokerEmailLabel, brokerEmailHBox));
+        formFields.add(new Pair<>(brokerNameLabel, brokerNameHBox));
+        formFields.add(new Pair<>(brokerPONumberLabel, brokerPONumber));
+        formFields.add(new Pair<>(shipperCompanyNameLabel, shipperCompanyNameHBox));
+        formFields.add(new Pair<>(shipperAddressLabel, shipperAddressHBox));
+        formFields.add(new Pair<>(shipperPhoneNumberLabel, shipperPhoneNumberHBox));
+        formFields.add(new Pair<>(shipperReeferTemperatureLabel, shipperReeferTempHBox));
+        formFields.add(new Pair<>(shipperDeliveryAddressLabel, shipperDeliveryAddressHBox));
+        formFields.add(new Pair<>(shipperPickupDateTimeLabel, shipperPickupDateTimeHBox));
+        formFields.add(new Pair<>(shipperApproxWeightLabel, shipperApproximateWeightHBox));
+        formFields.add(new Pair<>(shipperConfirmationNumberLabel, shipperConfirmationNumberHBox));
+        formFields.add(new Pair<>(receiverCompanyNameLabel, receiverCompanyNameHBox));
+        formFields.add(new Pair<>(receiverAddressLabel, receiverAddressHBox));
+        formFields.add(new Pair<>(receiverPhoneNumberLabel, receiverPhoneNumberHBox));
+        formFields.add(new Pair<>(receiverReeferTemperatureLabel, receiverReeferTempHBox));
+        formFields.add(new Pair<>(receiverDeliveryAddressLabel, receiverDeliveryAddressHBox));
+        formFields.add(new Pair<>(receiverPickupDateTimeLabel, receiverPickupDateTimeHBox));
+        formFields.add(new Pair<>(receiverApproxWeightLabel, receiverApproximateWeightHBox));
+        formFields.add(new Pair<>(receiverPickupNumberLabel, receiverPickupNumberHBox));
+        formFields.add(new Pair<>(grossLabel, grossHBox));
+        formFields.add(new Pair<>(lumperFeeLabel, lumperHBox));  // ✅ Added missing Lumper Fee label
+        formFields.add(new Pair<>(pickupDateLabel, pickupDateHBox));
+        formFields.add(new Pair<>(deliveryDateLabel, deliveryDateHBox));
+        formFields.add(new Pair<>(factoredFeeLabel, factorHBox));
+        formFields.add(new Pair<>(factorDateLabel, factorDateHBox));
+        formFields.add(new Pair<>(factorDueDateLabel, factorDueDateHBox));
+        formFields.add(new Pair<>(dispatchedFeeLabel, dispatchHBox));
+        formFields.add(new Pair<>(otbCostLabel, otbCostHBox));
 
-        // add text fields to arraylist for easy iteration
-        textFields.add(otbNumberTF);
-        textFields.add(brokerCompanyNameTF);
-        textFields.add(brokerAddressTF);
-        textFields.add(brokerPhoneNumberTF);
-        textFields.add(brokerReeferTemperatureTF);
-        textFields.add(brokerEmailTF);
-        textFields.add(brokerNameTF);
-        textFields.add(brokerPONumberTF);
-        textFields.add(shipperCompanyNameTF);
-        textFields.add(shipperAddressTF);
-        textFields.add(shipperPhoneNumberTF);
-        textFields.add(shipperReeferTemperatureTF);
-        textFields.add(shipperDeliveryAddressTF);
-        textFields.add(shipperPickupDateTimeTF);
-        textFields.add(shipperApproxWeightTF);
-        textFields.add(shipperConfirmationNumberTF);
-        textFields.add(receiverCompanyNameTF);
-        textFields.add(receiverAddressTF);
-        textFields.add(receiverPhoneNumberTF);
-        textFields.add(receiverReeferTemperatureTF);
-        textFields.add(receiverDeliveryAddressTF);
-        textFields.add(receiverPickupDateTimeTF);
-        textFields.add(receiverApproxWeightTF);
-        textFields.add(receiverPickupNumberTF);
-        textFields.add(grossTF);
-        textFields.add(pickupDateTF);
-        textFields.add(deliveryDateTF);
-        textFields.add(factoredFeeTF);
-        textFields.add(factorDateTF);
-        textFields.add(factorDueDateTF);
-        textFields.add(dispatchedFeeTF);
-        textFields.add(otbCostTF);
-
-        // add hboxes to array list for easy iteration
-        // Adding all HBoxes to the list
-        hBoxes.add(otbNumberHBox);
-        hBoxes.add(brokerCompanyNameHBox);
-        hBoxes.add(brokerAddressHBox);
-        hBoxes.add(brokerPhoneNumberHBox);
-        hBoxes.add(brokerReeferTempHBox);
-        hBoxes.add(brokerEmailHBox);
-        hBoxes.add(brokerNameHBox);
-        hBoxes.add(brokerPONumber);
-        hBoxes.add(shipperCompanyNameHBox);
-        hBoxes.add(shipperAddressHBox);
-        hBoxes.add(shipperPhoneNumberHBox);
-        hBoxes.add(shipperReeferTempHBox);
-        hBoxes.add(shipperDeliveryAddressHBox);
-        hBoxes.add(shipperPickupDateTimeHBox);
-        hBoxes.add(shipperApproximateWeightHBox);
-        hBoxes.add(shipperConfirmationNumberHBox);
-        hBoxes.add(receiverCompanyNameHBox);
-        hBoxes.add(receiverAddressHBox);
-        hBoxes.add(receiverPhoneNumberHBox);
-        hBoxes.add(receiverReeferTempHBox);
-        hBoxes.add(receiverDeliveryAddressHBox);
-        hBoxes.add(receiverPickupDateTimeHBox);
-        hBoxes.add(receiverApproximateWeightHBox);
-        hBoxes.add(receiverPickupNumberHBox);
-        hBoxes.add(grossHBox);
-        hBoxes.add(lumperHBox);
-        hBoxes.add(pickupDateHBox);
-        hBoxes.add(deliveryDateHBox);
-        hBoxes.add(factorHBox);
-        hBoxes.add(factorDateHBox);
-        hBoxes.add(factorDueDateHBox);
-        hBoxes.add(dispatchHBox);
-        hBoxes.add(otbCostHBox);
 
         // load suffix dropdown
         rkNumberSuffix.getItems().addAll("M", "D");
@@ -454,7 +385,7 @@ public class InvoiceCreator extends Pane {
 
             // calculate net profit
             sum = gross; // first get gross
-            sum = sum.subtract(lumperFee); // second subtract lumper fee
+            sum = sum.add(lumperFee); // second add lumper fee
             BigDecimal dispatcherNetProfit = sum.multiply(dispatchedFee.divide(new BigDecimal(100))); // get dispatcher profit
             sum = sum.subtract(dispatcherNetProfit); // third subtract dispatch fee
             sum = sum.subtract(sum.multiply(factoredFee.divide(new BigDecimal(100)))); // fourth subtract factor fee
@@ -521,29 +452,31 @@ public class InvoiceCreator extends Pane {
         gridPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) > 0);
 
         // loop through arrays to populate creator grid
-        for(int i = 0; i < labels.size(); i++) {
+        int i = 0;
+        for(Pair<Label, HBox> entry : formFields) {
             // change form based on suffix
             if(selectedSuffix.equals("M")) {
-                if(labels.get(i).getText().equals("OTB#: ") ||
-                labels.get(i).getText().equals("Factor Cost: ") ||
-                labels.get(i).getText().equals("OTB Cost: ")) {
+                if(entry.getKey().getText().equals("OTB#: ") ||
+                entry.getKey().getText().equals("Factor Cost: ") ||
+                entry.getKey().getText().equals("OTB Cost: ")) {
                     continue;
                 }
 
                 // add main labels, textboxes and spacing
-                gridPane.add(labels.get(i), 0, i + 1);
-                gridPane.add(hBoxes.get(i), 1, i + 1);
+                gridPane.add(entry.getKey(), 0, i + 1);
+                gridPane.add(entry.getValue(), 1, i + 1);
 
                 // add checkboxes when necessary
-                if(labels.get(i).getText().equals("Lumper Cost: ")) {
+                if(entry.getKey().getText().equals("Lumper Cost: ")) {
                     gridPane.add(lumperFeeCheckbox, 2, i + 1);
-                } else if(labels.get(i).getText().equals("Factor Fee: ")) {
+                } else if(entry.getKey().getText().equals("Factor Fee: ")) {
                     gridPane.add(factoredFeeCheckbox, 2, i + 1);
-                } else if(labels.get(i).getText().equals("Dispatch Fee: ")) {
+                } else if(entry.getKey().getText().equals("Dispatch Fee: ")) {
                     gridPane.add(dispatchedFeeCheckbox, 2, i + 1);
                 } else {
                     gridPane.add(new Label(""), 2, i + 1);
                 }
+                i++;
             }
         }
 
