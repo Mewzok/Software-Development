@@ -10,6 +10,7 @@ import javafx.util.converter.BigDecimalStringConverter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class InvoiceManager extends Application implements WindowCloseCallback {
     ArrayList<Invoice> invoices = new ArrayList<>();
@@ -99,29 +100,40 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         // delete context menu event
         deleteItem.setOnAction(deleteEvent -> {
-            boolean invoiceFound = false;
+            // create delete confirmation alert
+            Alert confirmDeleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmDeleteAlert.setTitle("Delete Invoice");
+            confirmDeleteAlert.setHeaderText("Are you sure you want to delete this invoice?");
+            confirmDeleteAlert.setContentText("This action cannot be undone.");
 
-            for(int i = 0; i < invoices.size(); i++) {
-                if(invoices.get(i).getRkNumber().equals(selectedInvoice.getRkNumber())) {
-                    invoiceFound = true;
-                    invoices.remove(i);
+            // show alert and wait for user input
+            Optional<ButtonType> result = confirmDeleteAlert.showAndWait();
 
-                    // reset ui
-                    InvoiceStorage.saveInvoices(invoices);
-                    loadInvoicesToGrid();
+            if(result.isPresent() && result.get() == ButtonType.OK) {
+                boolean invoiceFound = false;
 
-                    break;
+                for(int i = 0; i < invoices.size(); i++) {
+                    if(invoices.get(i).getRkNumber().equals(selectedInvoice.getRkNumber())) {
+                        invoiceFound = true;
+                        invoices.remove(i);
+
+                        // reset ui
+                        InvoiceStorage.saveInvoices(invoices);
+                        loadInvoicesToGrid();
+
+                        break;
+                    }
                 }
-            }
 
-            // only runs if invoice not found
-            if(!invoiceFound) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Invoice Not Found");
-                alert.setHeaderText(null);
-                alert.setContentText("Selected invoice could not be found.");
+                // only runs if invoice not found
+                if(!invoiceFound) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Invoice Not Found");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Selected invoice could not be found.");
 
-                alert.showAndWait();
+                    alert.showAndWait();
+                }
             }
         });
 
