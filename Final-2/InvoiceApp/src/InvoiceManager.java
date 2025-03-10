@@ -121,6 +121,8 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         primaryStage.setScene(scene);
         primaryStage.setHeight(700);
         primaryStage.show();
+
+        refreshSize();
     }
 
     // place headers in first row, also determine size of each column
@@ -144,8 +146,6 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             columnConstraints.setMaxWidth(Double.MAX_VALUE);
             mainGrid.getColumnConstraints().add(columnConstraints);
         }
-
-
     }
 
     private void addInvoiceToGrid(Invoice inv, int row) {
@@ -156,15 +156,15 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
                 inv.getBroker().getCompanyName(),
                 inv.getShipper().getCompanyName(),
                 inv.getReceiver().getCompanyName(),
-                inv.getGross().toString(),
+                inv.getGross(),
                 inv.getPickupDate(),
                 inv.getDeliveryDate(),
-                inv.getFactorCost().toString(),
+                inv.getFactorCost(),
                 inv.getFactorDate(),
                 inv.getFactorDueDate(),
-                inv.getDispatchCost().toString(),
-                inv.getOtbCost().toString(),
-                inv.getNet().toString() };
+                inv.getDispatchCost(),
+                inv.getOtbCost(),
+                inv.getNet() };
 
         // set row data from invoice array
         for (int col = 0; col < invoiceData.length; col++) {
@@ -195,9 +195,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             rowIndex++;
         }
 
-        mainGrid.layout();
-        primaryStage.setWidth(mainGrid.getWidth() + 50);
-        primaryStage.setHeight(700);
+        refreshSize();
     }
 
     private void addButtonsToPane(BorderPane mBPane) {
@@ -208,6 +206,11 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         buttonHBox.setAlignment(Pos.CENTER);
         mBPane.setBottom(buttonHBox);
+    }
+
+    private void refreshSize() {
+        primaryStage.close();
+        primaryStage.show();
     }
 
     @Override
