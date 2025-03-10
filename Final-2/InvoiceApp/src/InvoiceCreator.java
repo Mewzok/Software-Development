@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -6,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.Pair;
 
+import javax.swing.*;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.*;
@@ -443,7 +445,7 @@ public class InvoiceCreator extends Pane {
 
                 // check for valid values before creating invoice
                 if(invoice.isValidInvoice()) {
-                    invoice.setRkNumber(rkNumberTF.getText());
+                    invoice.setRkNumber(rkNumberTF.getText() + "-" + selectedSuffix);
                     invoice.setOtbNumber(otbNumberTF.getText());
                     invoice.setBroker(broker);
                     invoice.setShipper(shipper);
@@ -552,11 +554,16 @@ public class InvoiceCreator extends Pane {
         return invoice;
     }
 
-    // fill form if editing
+    // modify values and fill form if editing
     private void fillFieldsWithInvoiceData() {
         if(invoice != null) {
-            // format numbers for dollar amounts
-            rkNumberTF.setText(invoice.getRkNumber());
+            // get and set suffix
+            selectedSuffix = invoice.getRkNumber().substring(invoice.getRkNumber().length() - 1);
+            rkNumberSuffix.setValue(selectedSuffix);
+            Platform.runLater(() -> rkNumberSuffix.fireEvent(new ActionEvent()));
+            // remove suffix from number
+            rkNumberTF.setText(invoice.getRkNumber().substring(0, invoice.getRkNumber().length() - 2));
+
             otbNumberTF.setText(invoice.getOtbNumber());
             brokerDropdown.setValue(invoice.getBroker().getCompanyName());
             brokerAddressTF.setText(invoice.getBroker().getAddress());
@@ -581,16 +588,16 @@ public class InvoiceCreator extends Pane {
             receiverPickupDateTimeTF.setText(invoice.getReceiver().getPickupDateTime());
             receiverApproxWeightTF.setText(invoice.getReceiver().getApproximateWeight());
             receiverPickupNumberTF.setText(invoice.getReceiver().getPickupNumber());
-            grossTF.setText(invoice.getGross());
+            grossTF.setText(DollarConverter.formatFromDollars(invoice.getGross()).toString());
             pickupDateTF.setText(invoice.getPickupDate());
             deliveryDateTF.setText(invoice.getDeliveryDate());
-            factoredFeeTF.setText(invoice.getFactorCost());
+            factoredFeeTF.setText(DollarConverter.formatFromDollars(invoice.getFactorCost()).toString());
             factorDateTF.setText(invoice.getFactorDate());
             factorDueDateTF.setText(invoice.getFactorDueDate());
             dispatchedFeeTF.setText(invoice.getDispatchCostPercent());
             dispatchedCostDollarsTF.setText(invoice.getDispatchPay());
             otbCostTF.setText(invoice.getOtbCost());
-            netTF.setText(invoice.getNet());
+            netTF.setText(DollarConverter.formatFromDollars(invoice.getNet()).toString());
         }
     }
 }

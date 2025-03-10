@@ -208,14 +208,14 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             rowIndex++;
 
             // add net totals
-            dispatchNetAmount = dispatchNetAmount.add(new BigDecimal(invoice.getDispatchPay().replaceAll("[$,]", "")));
+            dispatchNetAmount = dispatchNetAmount.add(DollarConverter.formatFromDollars(invoice.getDispatchPay()));
 
             if(!invoice.getOtbCost().equals("N/A")) {
-                otbNetAmount = otbNetAmount.add(new BigDecimal(invoice.getOtbCost().replaceAll("[$,]", "")));
+                otbNetAmount = otbNetAmount.add(DollarConverter.formatFromDollars(invoice.getOtbCost()));
             }
 
             if(!invoice.getNet().equals("N/A")) {
-                rkNetAmount = rkNetAmount.add(new BigDecimal(invoice.getNet().replaceAll("[$,]", "")));
+                rkNetAmount = rkNetAmount.add(DollarConverter.formatFromDollars(invoice.getNet()));
             }
         }
 
