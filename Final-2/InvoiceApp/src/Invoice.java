@@ -14,7 +14,8 @@ public class Invoice implements Serializable {
     private String factorCost;
     private String factorDate;
     private String factorDueDate;
-    private String dispatchCost;
+    private String dispatchCostPercent;
+    private String dispatchPay;
     private String otbCost;
     private String net;
     private boolean validInvoice;
@@ -31,7 +32,8 @@ public class Invoice implements Serializable {
         this.factorCost = "0";
         this.factorDate = "";
         this.factorDueDate = "";
-        this.dispatchCost = "0";
+        this.dispatchCostPercent = "0";
+        this.dispatchPay = "0";
         this.otbCost = "0";
         this.net = "0";
         this.validInvoice = false;
@@ -40,7 +42,7 @@ public class Invoice implements Serializable {
     // all arg constructor
     public Invoice(String rkNumber, String otbNumber, Broker broker, Shipper shipper, Receiver receiver,
             String gross, String pickupDate, String deliveryDate, String factorCost, String factorDate,
-            String factorDueDate, String dispatchCost,
+            String factorDueDate, String dispatchCostPercent, String dispatchPay,
             String otbCost, String net) {
         this.rkNumber = rkNumber;
         this.otbNumber = otbNumber;
@@ -53,7 +55,8 @@ public class Invoice implements Serializable {
         this.factorCost = factorCost;
         this.factorDate = factorDate;
         this.factorDueDate = factorDueDate;
-        this.dispatchCost = dispatchCost;
+        this.dispatchCostPercent = dispatchCostPercent;
+        this.dispatchPay = dispatchPay;
         this.otbCost = otbCost;
         this.net = net;
         this.validInvoice = true;
@@ -104,9 +107,11 @@ public class Invoice implements Serializable {
         return factorDueDate;
     }
 
-    public String getDispatchCost() {
-        return dispatchCost;
+    public String getDispatchCostPercent() {
+        return dispatchCostPercent;
     }
+
+    public String getDispatchPay() { return dispatchPay; }
 
     public String getOtbCost() {
         return otbCost;
@@ -165,9 +170,11 @@ public class Invoice implements Serializable {
         this.factorDueDate = factorDueDate;
     }
 
-    public void setDispatchCost(String dispatchCost) {
-        this.dispatchCost = dispatchCost;
+    public void setDispatchCostPercent(String dispatchCost) {
+        this.dispatchCostPercent = dispatchCostPercent;
     }
+
+    public void setDispatchPay(String dispatchPay) {this.dispatchPay = dispatchPay; }
 
     public void setOtbCost(String otbCost) {
         this.otbCost = otbCost;

@@ -81,6 +81,7 @@ public class InvoiceCreator extends Pane {
     private TextField factorDateTF = new TextField();
     private TextField factorDueDateTF = new TextField();
     private TextField dispatchedFeeTF = new TextField("0");
+    private TextField dispatchedCostDollarsTF = new TextField("0");
     private TextField otbCostTF = new TextField();
     private TextField netTF = new TextField();
 
@@ -394,10 +395,13 @@ public class InvoiceCreator extends Pane {
 
             // convert to US dollars
             String netFormatted = DollarConverter.formatToDollars(netProfit);
+            String dispatchedFormatted = DollarConverter.formatToDollars(dispatcherNetProfit);
 
             rkNetPayLabel.setText("Net Profit: " + netFormatted);
             netTF.setText(netFormatted);
             dispatcherNetPayLabel.setText("Dispatcher cost: $" + dispatcherNetProfit);
+            dispatchedCostDollarsTF.setText(dispatchedFormatted);
+
         } catch(NumberFormatException e) {
             rkNetPayLabel.setText("Net Profit: Error");
         }
@@ -445,7 +449,8 @@ public class InvoiceCreator extends Pane {
                     invoice.setFactorCost(factorCostDollars);
                     invoice.setFactorDate(factorDateTF.getText());
                     invoice.setFactorDueDate(factorDueDateTF.getText());
-                    invoice.setDispatchCost(dispatchCostDollars);
+                    invoice.setDispatchCostPercent(dispatchCostDollars);
+                    invoice.setDispatchPay(dispatchedCostDollarsTF.getText());
                     invoice.setOtbCost(otbCostDollars);
                     invoice.setNet(netTF.getText());
 
@@ -549,14 +554,15 @@ public class InvoiceCreator extends Pane {
             receiverPickupDateTimeTF.setText(invoice.getReceiver().getPickupDateTime());
             receiverApproxWeightTF.setText(invoice.getReceiver().getApproximateWeight());
             receiverPickupNumberTF.setText(invoice.getReceiver().getPickupNumber());
-            grossTF.setText(invoice.getGross().toString());
+            grossTF.setText(invoice.getGross());
             pickupDateTF.setText(invoice.getPickupDate());
             deliveryDateTF.setText(invoice.getDeliveryDate());
-            factoredFeeTF.setText(invoice.getFactorCost().toString());
+            factoredFeeTF.setText(invoice.getFactorCost());
             factorDateTF.setText(invoice.getFactorDate());
             factorDueDateTF.setText(invoice.getFactorDueDate());
-            dispatchedFeeTF.setText(invoice.getDispatchCost().toString());
-            otbCostTF.setText(invoice.getOtbCost().toString());
+            dispatchedFeeTF.setText(invoice.getDispatchCostPercent());
+            dispatchedCostDollarsTF.setText(invoice.getDispatchPay());
+            otbCostTF.setText(invoice.getOtbCost());
             netTF.setText(invoice.getNet());
         }
     }

@@ -172,7 +172,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
                 inv.getFactorCost(),
                 inv.getFactorDate(),
                 inv.getFactorDueDate(),
-                inv.getDispatchCost(),
+                inv.getDispatchPay(),
                 inv.getOtbCost(),
                 inv.getNet() };
 
@@ -194,6 +194,9 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     private void loadInvoicesToGrid() {
         // clear pane entirely
         mainGrid.getChildren().clear();
+        dispatchNetAmount = new BigDecimal(0);
+        otbNetAmount = new BigDecimal(0);
+        rkNetAmount = new BigDecimal(0);
 
         // load header to grid
         placeHeadersInRow();
@@ -205,7 +208,8 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             rowIndex++;
 
             // add net totals
-            dispatchNetAmount = dispatchNetAmount.add(new BigDecimal(invoice.getDispatchCost().replaceAll("[$,]", "")));
+            dispatchNetAmount = dispatchNetAmount.add(new BigDecimal(invoice.getDispatchPay().replaceAll("[$,]", "")));
+            System.out.println(dispatchNetAmount);
             otbNetAmount = otbNetAmount.add(new BigDecimal(invoice.getOtbCost().replaceAll("[$,]", "")));
             rkNetAmount = rkNetAmount.add(new BigDecimal(invoice.getNet().replaceAll("[$,]", "")));
         }
@@ -234,15 +238,15 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         labelHBox.getChildren().addAll(dispatchNetLabel, otbNetLabel, rkNetLabel);
 
-        labelHBox.setAlignment(Pos.CENTER);
+        labelHBox.setAlignment(Pos.CENTER_RIGHT);
         bottomHBox.setAlignment(Pos.CENTER);
 
         Region spacer = new Region(); // spacer to force button in the middle, labels on the right
-        spacer.setMinWidth(primaryStage.getWidth() * 1.5);
+        spacer.setMinWidth(primaryStage.getWidth());
 
         HBox.setHgrow(labelHBox, Priority.ALWAYS);
 
-        bottomHBox.getChildren().addAll(spacer, addButton, labelHBox);
+        bottomHBox.getChildren().addAll(addButton, labelHBox);
 
         mBPane.setBottom(bottomHBox);
     }
