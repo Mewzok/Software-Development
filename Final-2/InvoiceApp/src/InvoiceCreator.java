@@ -138,6 +138,7 @@ public class InvoiceCreator extends Pane {
     private List<TextField> textFields = new ArrayList<>();
 
     private GridPane gridPane = new GridPane();
+    private VBox vBox = new VBox(gridPane);
 
     // constructor for creating a new invoice
     public InvoiceCreator(WindowCloseCallback callback) {
@@ -180,7 +181,6 @@ public class InvoiceCreator extends Pane {
         labels.add(receiverApproxWeightLabel);
         labels.add(receiverPickupNumberLabel);
         labels.add(grossLabel);
-        labels.add(factoredFeeLabel);
         labels.add(pickupDateLabel);
         labels.add(deliveryDateLabel);
         labels.add(factoredFeeLabel);
@@ -215,7 +215,6 @@ public class InvoiceCreator extends Pane {
         textFields.add(receiverApproxWeightTF);
         textFields.add(receiverPickupNumberTF);
         textFields.add(grossTF);
-        textFields.add(factoredFeeTF);
         textFields.add(pickupDateTF);
         textFields.add(deliveryDateTF);
         textFields.add(factoredFeeTF);
@@ -404,7 +403,7 @@ public class InvoiceCreator extends Pane {
 
         // group elements into HBox
         HBox rkNumberLabelSpacing = new HBox(5, new Label("   "), rkNumberTF);
-        HBox rkNumberHBox = new HBox(5, new Label("-"), rkNumberSuffix);
+        HBox rkNumberHBox = new HBox(5, new Label("-") {{setStyle("-fx-font-size: 20px");}}, rkNumberSuffix);
 
         // add RK Number label, text field and suffix dropdown
         gridPane.add(rkNumberLabel, 0, 0);
@@ -412,7 +411,6 @@ public class InvoiceCreator extends Pane {
         gridPane.add(rkNumberHBox, 2, 0);
 
         // wrap in vbox so scrolling actually works
-        VBox vBox = new VBox(gridPane);
         vBox.setMinHeight((gridPane.getChildren().size() / 2) * 27); // number of rows * approx size of each row
         vBox.setPrefHeight((gridPane.getChildren().size() / 2) * 27);
 
@@ -519,7 +517,8 @@ public class InvoiceCreator extends Pane {
         // receive RK# suffix
         String selectedSuffix = rkNumberSuffix.getValue();
 
-
+        // clear grid before populating
+        gridPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) > 0);
 
         // loop through arrays to populate creator grid
         for(int i = 0; i < labels.size(); i++) {
@@ -530,45 +529,28 @@ public class InvoiceCreator extends Pane {
                 labels.get(i).getText().equals("OTB Cost: ")) {
                     continue;
                 }
+
+                // add main labels, textboxes and spacing
                 gridPane.add(labels.get(i), 0, i + 1);
                 gridPane.add(hBoxes.get(i), 1, i + 1);
 
+                // add checkboxes when necessary
                 if(labels.get(i).getText().equals("Lumper Cost: ")) {
                     gridPane.add(lumperFeeCheckbox, 2, i + 1);
                 } else if(labels.get(i).getText().equals("Factor Fee: ")) {
                     gridPane.add(factoredFeeCheckbox, 2, i + 1);
-                } else if(labels.get(i).getText().equals("Dispach Fee: ")) {
+                } else if(labels.get(i).getText().equals("Dispatch Fee: ")) {
                     gridPane.add(dispatchedFeeCheckbox, 2, i + 1);
                 } else {
                     gridPane.add(new Label(""), 2, i + 1);
                 }
-
-/*                gridPane.add(grossLabel, 0, 1);
-                gridPane.add(grossHBox, 1, 1);
-                gridPane.add(new Label(""), 2, 1);
-                gridPane.add(lumperFeeLabel, 0, 2);
-                gridPane.add(lumperHBox, 1, 2);
-                gridPane.add(lumperFeeCheckbox, 2, 2);
-                gridPane.add(pickupDateLabel, 0, 3);
-                gridPane.add(pickupDateHBox, 1, 3);
-                gridPane.add(new Label(""), 2, 3);
-                gridPane.add(deliveryDateLabel, 0, 4);
-                gridPane.add(deliveryDateHBox, 1, 4);
-                gridPane.add(new Label(""), 2, 4);
-                gridPane.add(factoredFeeLabel, 0, 5);
-                gridPane.add(factorHBox, 1, 5);
-                gridPane.add(factoredFeeCheckbox, 2, 5);
-                gridPane.add(factorDateLabel, 0, 6);
-                gridPane.add(factorDateHBox, 1, 6);
-                gridPane.add(new Label(""), 2, 6);
-                gridPane.add(factorDueDateLabel, 0, 7);
-                gridPane.add(factorDueDateHBox, 1, 7);
-                gridPane.add(new Label(""), 2, 7);
-                gridPane.add(dispatchedFeeLabel, 0, 8);
-                gridPane.add(dispatchHBox, 1, 8);
-                gridPane.add(dispatchedFeeCheckbox, 2, 8);*/
             }
         }
+
+        // resize vbox after population to fix scrollbar
+        gridPane.applyCss();
+        gridPane.layout();
+        vBox.setPrefHeight(gridPane.getBoundsInLocal().getHeight());
     }
 
     private BigDecimal bigDecimalConversion(TextField tf, String fieldType) {
