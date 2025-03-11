@@ -1,10 +1,13 @@
-add "are you sure" to delete invoice. and test it.
-add frequently used options to field inputs
-multiple pages?
-sort feature?
-search feature?
-remove invoice
+change border color of cell when right clicked, also show name of invoice upon deletion
+add extra comment field to broker, shipper and receiver
+multiple pages by quarter
+delete brokers
 open necessary windows to read extra data
-check resizing?
 check for RK/OTB numbers with the same number?
-so much debugging.
+add new button to edit saved brokers shippers and receivers?
+
+-- after final --
+add "default" net
+
+-- questions --
+Dan has every field?
