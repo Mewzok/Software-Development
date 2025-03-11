@@ -280,12 +280,20 @@ public class InvoiceCreator extends Pane {
             }
         });
 
-        // extra info setups
-        brokerExtraInfoTA.setPromptText("Enter additional information...");
-        brokerExtraInfoTA.setVisible(false);
-
         // show/hide extra info text area
-        brokerExtraInfoCheckbox.setOnAction(e -> brokerExtraInfoTA.setVisible(brokerExtraInfoCheckbox.isSelected()));
+        brokerExtraInfoTA.setEditable(false);
+        brokerExtraInfoTA.setStyle("-fx-background-color: #e0e0e0;"); // gray
+
+        brokerExtraInfoCheckbox.setOnAction(e -> {
+            if(brokerExtraInfoCheckbox.isSelected()) {
+                brokerExtraInfoTA.setEditable(true);
+                brokerExtraInfoTA.setStyle("-fx-background-color: white;");
+                brokerExtraInfoTA.setPromptText("Enter additional information...");
+            } else {
+                brokerExtraInfoTA.setEditable(false);
+                brokerExtraInfoTA.setStyle("-fx-background-color: #e0e0e0;"); // gray
+            }
+        });
 
         // autofill details when saved field is selected
         // broker autofill
@@ -300,6 +308,7 @@ public class InvoiceCreator extends Pane {
                 brokerEmailTF.setText(broker.getEmail());
                 brokerNameTF.setText(broker.getBrokerName());
                 brokerPONumberTF.setText(broker.getPoNumber());
+                brokerExtraInfoTA.setText(broker.getExtraInfo());
             }
         });
 
@@ -441,8 +450,8 @@ public class InvoiceCreator extends Pane {
                 invoice.setValidInvoice(true);
                 // create broker shipper and receiver objects from inputted fields
                 Broker broker = new Broker(brokerDropdown.getValue(), brokerAddressTF.getText(), brokerPhoneNumberTF.getText(),
-                        brokerReeferTemperatureTF.getText(), brokerExtraInfoTA.getText(), brokerEmailTF.getText(),
-                        brokerNameTF.getText(), brokerPONumberTF.getText());
+                        brokerReeferTemperatureTF.getText(), brokerEmailTF.getText(),
+                        brokerNameTF.getText(), brokerPONumberTF.getText(), brokerExtraInfoTA.getText());
                 Shipper shipper = new Shipper(shipperDropdown.getValue(), shipperAddressTF.getText(), shipperPhoneNumberTF.getText(),
                         shipperReeferTemperatureTF.getText(), shipperExtraInfoTA.getText(), shipperDeliveryAddressTF.getText(), shipperPickupDateTimeTF.getText(),
                         shipperApproxWeightTF.getText(), shipperConfirmationNumberTF.getText());
@@ -477,8 +486,6 @@ public class InvoiceCreator extends Pane {
                     invoice.setFactorDueDate(factorDueDateTF.getText());
                     invoice.setDispatchCostPercent(dispatchCostDollars);
                     invoice.setDispatchPay(dispatchedCostDollarsTF.getText());
-
-                    System.out.println(brokerExtraInfoTA.getText());
 
                     if(selectedSuffix == "D") {
                         invoice.setOtbCost(netTF.getText());
@@ -543,6 +550,8 @@ public class InvoiceCreator extends Pane {
                     gridPane.add(factoredFeeCheckbox, 2, i + 1);
                 } else if(entry.getKey().getText().equals("Dispatch Fee: ")) {
                     gridPane.add(dispatchedFeeCheckbox, 2, i + 1);
+                } else if(entry.getKey().getText().equals("Extra Broker Information: ")) {
+                    gridPane.add(brokerExtraInfoCheckbox, 2, i + 1);
                 } else {
                     gridPane.add(new Label(""), 2, i + 1);
                 }
@@ -592,10 +601,16 @@ public class InvoiceCreator extends Pane {
             brokerAddressTF.setText(invoice.getBroker().getAddress());
             brokerPhoneNumberTF.setText(invoice.getBroker().getPhoneNumber());
             brokerReeferTemperatureTF.setText(invoice.getBroker().getReeferTemperature());
-            brokerExtraInfoTA.setText(invoice.getBroker().getExtraInfo());
             brokerEmailTF.setText(invoice.getBroker().getEmail());
             brokerNameTF.setText(invoice.getBroker().getBrokerName());
             brokerPONumberTF.setText(invoice.getBroker().getPoNumber());
+
+            // testing
+            if(invoice.getBroker().getExtraInfo() != null && !invoice.getBroker().getExtraInfo().equals("")) {
+                brokerExtraInfoCheckbox.setSelected(true);
+                brokerExtraInfoCheckbox.fireEvent(new ActionEvent());
+                brokerExtraInfoTA.setText(invoice.getBroker().getExtraInfo());
+            }
             shipperDropdown.setValue(invoice.getShipper().getCompanyName());
             shipperAddressTF.setText(invoice.getShipper().getAddress());
             shipperPhoneNumberTF.setText(invoice.getShipper().getPhoneNumber());

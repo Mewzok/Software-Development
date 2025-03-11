@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.converter.BigDecimalStringConverter;
@@ -221,19 +222,22 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             final int clickedColumn = col;
             // listen for click on clickable cells
             cell.setOnMouseClicked(e -> {
-                // broker window
-                if(clickedColumn == 2) {
-                    inv.getBroker().openBrokerWindow();
-                }
+                // only left click
+                if (e.getButton() == MouseButton.PRIMARY) {
+                    // broker window
+                    if (clickedColumn == 2) {
+                        inv.getBroker().openBrokerWindow();
+                    }
 
-                // shipper window
-                if(clickedColumn == 3) {
+                    // shipper window
+                    if (clickedColumn == 3) {
 
-                }
+                    }
 
-                // receiver window
-                if(clickedColumn == 4) {
+                    // receiver window
+                    if (clickedColumn == 4) {
 
+                    }
                 }
             });
 
@@ -311,7 +315,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         labelHBox.setAlignment(Pos.CENTER_RIGHT);
         bottomHBox.setAlignment(Pos.CENTER);
 
-        Region spacer = new Region(); // spacer to force button in the middle, labels on the right
+        Region spacer = new Region();
         spacer.setMinWidth(primaryStage.getWidth());
 
         HBox.setHgrow(labelHBox, Priority.ALWAYS);

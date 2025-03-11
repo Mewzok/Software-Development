@@ -18,8 +18,8 @@ public class Broker extends Logistic implements Serializable {
     public Broker() {
     }
 
-    public Broker(String companyName, String address, String phoneNumber, String reeferTemperature, String extraInfo,
-                  String email, String brokerName, String poNumber) {
+    public Broker(String companyName, String address, String phoneNumber, String reeferTemperature,
+                  String email, String brokerName, String poNumber, String extraInfo) {
         super(companyName, address, phoneNumber, reeferTemperature, extraInfo);
         this.email = email;
         this.brokerName = brokerName;
@@ -131,6 +131,8 @@ public class Broker extends Logistic implements Serializable {
         brokerStage.setMinWidth(400);
         brokerStage.setMinHeight(400);
         brokerStage.setResizable(true);
+
+        brokerStage.setHeight(bp.getHeight());
 
         brokerStage.show();
     }

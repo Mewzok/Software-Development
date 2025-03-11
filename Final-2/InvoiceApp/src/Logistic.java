@@ -16,6 +16,7 @@ public abstract class Logistic implements Serializable {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.reeferTemperature = reeferTemperature;
+        this.extraInfo = extraInfo;
     }
 
     // getters
