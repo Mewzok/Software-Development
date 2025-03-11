@@ -16,6 +16,7 @@ import java.util.Optional;
 public class InvoiceManager extends Application implements WindowCloseCallback {
     ArrayList<Invoice> invoices = new ArrayList<>();
     private Button addButton = new Button("Create New Invoice");
+    private Button editLogisticsButton = new Button("Edit Logistics");
 
     private Label dispatchNetLabel = new Label();
     private BigDecimal dispatchNetAmount = new BigDecimal(0);
@@ -46,7 +47,6 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         // create scroll bar
         ScrollPane scrollPane = new ScrollPane(mainGrid);
-        scrollPane.setFitToWidth(true);
         mainBorderPane.setCenter(scrollPane);
 
         // create context menu
@@ -307,8 +307,10 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         // set up button and label layout for bottom pane
         HBox bottomHBox = new HBox(8);
+        HBox buttonHBox = new HBox(8);
         HBox labelHBox = new HBox(8);
 
+        buttonHBox.getChildren().addAll(addButton, editLogisticsButton);
         labelHBox.getChildren().addAll(dispatchNetLabel, otbNetLabel, rkNetLabel);
 
         labelHBox.setAlignment(Pos.CENTER_RIGHT);
@@ -319,7 +321,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
         HBox.setHgrow(labelHBox, Priority.ALWAYS);
 
-        bottomHBox.getChildren().addAll(addButton, labelHBox);
+        bottomHBox.getChildren().addAll(buttonHBox, labelHBox);
 
         mBPane.setBottom(bottomHBox);
     }
