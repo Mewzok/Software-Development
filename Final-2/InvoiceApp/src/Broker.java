@@ -78,7 +78,7 @@ public class Broker extends Logistic implements Serializable {
                 {"Reefer Temperature:", this.reeferTemperature},
                 {"Email:", this.email},
                 {"Broker Name:", this.brokerName},
-                {"PO Number:", this.poNumber},
+                {"PO Number:", this.poNumber}
         };
 
         for (int i = 0; i < details.length; i++) {

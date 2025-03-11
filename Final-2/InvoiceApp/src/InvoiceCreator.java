@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.Pair;
 
-import javax.swing.*;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.*;
@@ -22,10 +21,10 @@ public class InvoiceCreator extends Pane {
     private final Label brokerAddressLabel = new Label("Broker Address: ");
     private final Label brokerPhoneNumberLabel = new Label("Broker Phone Number: ");
     private final Label brokerReeferTemperatureLabel = new Label("Broker Reefer Temperature: ");
-    private final Label brokerExtraInfoLabel = new Label("Extra Broker Information: ");
     private final Label brokerEmailLabel = new Label("Broker Email: ");
     private final Label brokerNameLabel = new Label("Broker Name: ");
     private final Label brokerPONumberLabel = new Label("Broker PO#: ");
+    private final Label brokerExtraInfoLabel = new Label("Extra Broker Information: ");
     private final Label shipperCompanyNameLabel = new Label("Shipper Company Name: ");
     private final Label shipperAddressLabel = new Label("Shipper Address: ");
     private final Label shipperPhoneNumberLabel = new Label("Shipper Phone Number: ");
@@ -34,6 +33,7 @@ public class InvoiceCreator extends Pane {
     private final Label shipperPickupDateTimeLabel = new Label("Shipper Pickup Date: ");
     private final Label shipperApproxWeightLabel = new Label("Shipper Approximate Weight: ");
     private final Label shipperConfirmationNumberLabel = new Label("Shipper Confirmation Number: ");
+    private final Label shipperExtraInfoLabel = new Label("Extra Shipper Information: ");
     private final Label receiverCompanyNameLabel = new Label("Receiver Company Name: ");
     private final Label receiverAddressLabel = new Label("Receiver Address: ");
     private final Label receiverPhoneNumberLabel = new Label("Receiver Phone Number: ");
@@ -41,7 +41,8 @@ public class InvoiceCreator extends Pane {
     private final Label receiverDeliveryAddressLabel = new Label("Receiver Delivery Address: ");
     private final Label receiverPickupDateTimeLabel = new Label("Receiver Pickup Date: ");
     private final Label receiverApproxWeightLabel = new Label("Receiver Approximate Weight: ");
-    private final Label receiverPickupNumberLabel = new Label("Receiver Confirmation Number: ");
+    private final Label receiverPickupNumberLabel = new Label("Receiver Pickup Number: ");
+    private final Label receiverExtraInfoLabel = new Label("Extra Receiver Information: ");
     private final Label grossLabel = new Label("Gross: ");
     private final Label lumperFeeLabel = new Label("Lumper Cost: ");
     private final Label pickupDateLabel = new Label("Pickup Date: ");
@@ -56,10 +57,10 @@ public class InvoiceCreator extends Pane {
     private TextField brokerAddressTF = new TextField();
     private TextField brokerPhoneNumberTF = new TextField();
     private TextField brokerReeferTemperatureTF = new TextField();
-    private TextArea brokerExtraInfoTA = new TextArea();
     private TextField brokerEmailTF = new TextField();
     private TextField brokerNameTF = new TextField();
     private TextField brokerPONumberTF = new TextField();
+    private TextArea brokerExtraInfoTA = new TextArea();
     private TextField shipperCompanyNameTF = new TextField();
     private TextField shipperAddressTF = new TextField();
     private TextField shipperPhoneNumberTF = new TextField();
@@ -68,6 +69,7 @@ public class InvoiceCreator extends Pane {
     private TextField shipperPickupDateTimeTF = new TextField("");
     private TextField shipperApproxWeightTF = new TextField();
     private TextField shipperConfirmationNumberTF = new TextField();
+    private TextArea shipperExtraInfoTA = new TextArea();
     private TextField receiverCompanyNameTF = new TextField();
     private TextField receiverAddressTF = new TextField();
     private TextField receiverPhoneNumberTF = new TextField();
@@ -76,6 +78,7 @@ public class InvoiceCreator extends Pane {
     private TextField receiverPickupDateTimeTF = new TextField();
     private TextField receiverApproxWeightTF = new TextField();
     private TextField receiverPickupNumberTF = new TextField();
+    private TextArea receiverExtraInfoTA = new TextArea();
     private TextField grossTF = new TextField();
     private TextField lumperFeeTF = new TextField("0");
     private TextField pickupDateTF = new TextField();
@@ -99,10 +102,10 @@ public class InvoiceCreator extends Pane {
     private HBox brokerAddressHBox = new HBox(5, new Label("   "), brokerAddressTF, new Label(""));
     private HBox brokerPhoneNumberHBox = new HBox(5, new Label("   "), brokerPhoneNumberTF, new Label(""));
     private HBox brokerReeferTempHBox = new HBox(5, new Label("   "), brokerReeferTemperatureTF, new Label(""));
-    private HBox brokerExtraInfoHBox = new HBox(5, new Label("   "), brokerExtraInfoTA, new Label(""));
     private HBox brokerEmailHBox = new HBox(5, new Label("   "), brokerEmailTF, new Label(""));
     private HBox brokerNameHBox = new HBox(5, new Label("   "), brokerNameTF, new Label(""));
     private HBox brokerPONumber = new HBox(5, new Label("   "), brokerPONumberTF, new Label(""));
+    private HBox brokerExtraInfoHBox = new HBox(5, new Label("   "), brokerExtraInfoTA, new Label(""));
     private HBox shipperCompanyNameHBox = new HBox(5, new Label("   "), shipperDropdown, new Label(""));
     private HBox shipperAddressHBox = new HBox(5, new Label("   "), shipperAddressTF, new Label(""));
     private HBox shipperPhoneNumberHBox = new HBox(5, new Label("   "), shipperPhoneNumberTF, new Label(""));
@@ -111,6 +114,7 @@ public class InvoiceCreator extends Pane {
     private HBox shipperPickupDateTimeHBox = new HBox(5, new Label("   "), shipperPickupDateTimeTF, new Label(""));
     private HBox shipperApproximateWeightHBox = new HBox(5, new Label("   "), shipperApproxWeightTF, new Label(""));
     private HBox shipperConfirmationNumberHBox = new HBox(5, new Label("   "), shipperConfirmationNumberTF, new Label(""));
+    private HBox shipperExtraInfoHBox = new HBox(5, new Label("   "), shipperExtraInfoTA, new Label(""));
     private HBox receiverCompanyNameHBox = new HBox(5, new Label("   "), receiverDropdown, new Label(""));
     private HBox receiverAddressHBox = new HBox(5, new Label("   "), receiverAddressTF, new Label(""));
     private HBox receiverPhoneNumberHBox = new HBox(5, new Label("   "), receiverPhoneNumberTF, new Label(""));
@@ -119,6 +123,7 @@ public class InvoiceCreator extends Pane {
     private HBox receiverPickupDateTimeHBox = new HBox(5, new Label("   "), receiverPickupDateTimeTF, new Label(""));
     private HBox receiverApproximateWeightHBox = new HBox(5, new Label("   "), receiverApproxWeightTF, new Label(""));
     private HBox receiverPickupNumberHBox = new HBox(5, new Label("   "), receiverPickupNumberTF, new Label(""));
+    private HBox receiverExtraInfoHBox = new HBox(5, new Label("   "), receiverExtraInfoTA, new Label(""));
     private HBox grossHBox = new HBox(5, new Label("$"), grossTF);
     private HBox lumperHBox = new HBox(5, new Label("$"), lumperFeeTF);
     private HBox pickupDateHBox = new HBox(5, new Label("   "), pickupDateTF);
@@ -138,10 +143,8 @@ public class InvoiceCreator extends Pane {
 
     // extra information checkboxes
     CheckBox brokerExtraInfoCheckbox = new CheckBox();
-    CheckBox shipperExtraInfoCheckbox = new CheckBox("Extra Shipper Information");
-    TextArea shipperExtraInfoTA = new TextArea();
-    CheckBox receiverExtraInfoCheckbox = new CheckBox("Extra Receiver Information");
-    TextArea receiverExtraInfoTA = new TextArea();
+    CheckBox shipperExtraInfoCheckbox = new CheckBox();
+    CheckBox receiverExtraInfoCheckbox = new CheckBox();
 
     private Label rkNetPayLabel = new Label("");
     private Label dispatcherNetPayLabel = new Label("");
@@ -186,6 +189,7 @@ public class InvoiceCreator extends Pane {
         formFields.add(new Pair<>(shipperPickupDateTimeLabel, shipperPickupDateTimeHBox));
         formFields.add(new Pair<>(shipperApproxWeightLabel, shipperApproximateWeightHBox));
         formFields.add(new Pair<>(shipperConfirmationNumberLabel, shipperConfirmationNumberHBox));
+        formFields.add(new Pair<>(shipperExtraInfoLabel, shipperExtraInfoHBox));
         formFields.add(new Pair<>(receiverCompanyNameLabel, receiverCompanyNameHBox));
         formFields.add(new Pair<>(receiverAddressLabel, receiverAddressHBox));
         formFields.add(new Pair<>(receiverPhoneNumberLabel, receiverPhoneNumberHBox));
@@ -194,6 +198,7 @@ public class InvoiceCreator extends Pane {
         formFields.add(new Pair<>(receiverPickupDateTimeLabel, receiverPickupDateTimeHBox));
         formFields.add(new Pair<>(receiverApproxWeightLabel, receiverApproximateWeightHBox));
         formFields.add(new Pair<>(receiverPickupNumberLabel, receiverPickupNumberHBox));
+        formFields.add(new Pair<>(receiverExtraInfoLabel, receiverExtraInfoHBox));
         formFields.add(new Pair<>(grossLabel, grossHBox));
         formFields.add(new Pair<>(lumperFeeLabel, lumperHBox));
         formFields.add(new Pair<>(pickupDateLabel, pickupDateHBox));
@@ -284,6 +289,13 @@ public class InvoiceCreator extends Pane {
         brokerExtraInfoTA.setEditable(false);
         brokerExtraInfoTA.setStyle("-fx-background-color: #e0e0e0;"); // gray
 
+        shipperExtraInfoTA.setEditable(false);
+        shipperExtraInfoTA.setStyle("-fx-background-color: #e0e0e0;"); // gray
+
+        receiverExtraInfoTA.setEditable(false);
+        receiverExtraInfoTA.setStyle("-fx-background-color: #e0e0e0;"); // gray
+
+        // extra info checkbox handlers
         brokerExtraInfoCheckbox.setOnAction(e -> {
             if(brokerExtraInfoCheckbox.isSelected()) {
                 brokerExtraInfoTA.setEditable(true);
@@ -292,6 +304,28 @@ public class InvoiceCreator extends Pane {
             } else {
                 brokerExtraInfoTA.setEditable(false);
                 brokerExtraInfoTA.setStyle("-fx-background-color: #e0e0e0;"); // gray
+            }
+        });
+
+        shipperExtraInfoCheckbox.setOnAction(e -> {
+            if(shipperExtraInfoCheckbox.isSelected()) {
+                shipperExtraInfoTA.setEditable(true);
+                shipperExtraInfoTA.setStyle("-fx-background-color: white;");
+                shipperExtraInfoTA.setPromptText("Enter additional information...");
+            } else {
+                shipperExtraInfoTA.setEditable(false);
+                shipperExtraInfoTA.setStyle("-fx-background-color: #e0e0e0;"); // gray
+            }
+        });
+
+        receiverExtraInfoCheckbox.setOnAction(e -> {
+            if(receiverExtraInfoCheckbox.isSelected()) {
+                receiverExtraInfoTA.setEditable(true);
+                receiverExtraInfoTA.setStyle("-fx-background-color: white;");
+                receiverExtraInfoTA.setPromptText("Enter additional information...");
+            } else {
+                receiverExtraInfoTA.setEditable(false);
+                receiverExtraInfoTA.setStyle("-fx-background-color: #e0e0e0;"); // gray
             }
         });
 
@@ -309,6 +343,12 @@ public class InvoiceCreator extends Pane {
                 brokerNameTF.setText(broker.getBrokerName());
                 brokerPONumberTF.setText(broker.getPoNumber());
                 brokerExtraInfoTA.setText(broker.getExtraInfo());
+
+                // activate extra info checkbox if on
+                if(broker.getExtraInfo() != null && !broker.getExtraInfo().equals("")) {
+                    brokerExtraInfoCheckbox.setSelected(true);
+                    brokerExtraInfoCheckbox.fireEvent(new ActionEvent());
+                }
             }
         });
 
@@ -325,6 +365,13 @@ public class InvoiceCreator extends Pane {
                 shipperPickupDateTimeTF.setText(shipper.getPickupDateTime());
                 shipperApproxWeightTF.setText(shipper.getApproximateWeight());
                 shipperConfirmationNumberTF.setText(shipper.getConfirmationNumber());
+                shipperExtraInfoTA.setText(shipper.getExtraInfo());
+
+                // activate extra info checkbox if on
+                if(shipper.getExtraInfo() != null && !shipper.getExtraInfo().equals("")) {
+                    shipperExtraInfoCheckbox.setSelected(true);
+                    shipperExtraInfoCheckbox.fireEvent(new ActionEvent());
+                }
             }
         });
 
@@ -341,6 +388,13 @@ public class InvoiceCreator extends Pane {
                 receiverPickupDateTimeTF.setText(receiver.getPickupDateTime());
                 receiverApproxWeightTF.setText(receiver.getApproximateWeight());
                 receiverPickupNumberTF.setText(receiver.getPickupNumber());
+                receiverExtraInfoTA.setText(receiver.getExtraInfo());
+
+                // activate extra info checkbox if on
+                if(receiver.getExtraInfo() != null && !receiver.getExtraInfo().equals("")) {
+                    receiverExtraInfoCheckbox.setSelected(true);
+                    receiverExtraInfoCheckbox.fireEvent(new ActionEvent());
+                }
             }
         });
 
@@ -453,11 +507,11 @@ public class InvoiceCreator extends Pane {
                         brokerReeferTemperatureTF.getText(), brokerEmailTF.getText(),
                         brokerNameTF.getText(), brokerPONumberTF.getText(), brokerExtraInfoTA.getText());
                 Shipper shipper = new Shipper(shipperDropdown.getValue(), shipperAddressTF.getText(), shipperPhoneNumberTF.getText(),
-                        shipperReeferTemperatureTF.getText(), shipperExtraInfoTA.getText(), shipperDeliveryAddressTF.getText(), shipperPickupDateTimeTF.getText(),
-                        shipperApproxWeightTF.getText(), shipperConfirmationNumberTF.getText());
+                        shipperReeferTemperatureTF.getText(), shipperDeliveryAddressTF.getText(), shipperPickupDateTimeTF.getText(),
+                        shipperApproxWeightTF.getText(), shipperConfirmationNumberTF.getText(), shipperExtraInfoTA.getText());
                 Receiver receiver = new Receiver(receiverDropdown.getValue(), receiverAddressTF.getText(), receiverPhoneNumberTF.getText(),
-                        receiverReeferTemperatureTF.getText(), receiverExtraInfoTA.getText(), receiverDeliveryAddressTF.getText(), receiverPickupDateTimeTF.getText(),
-                        receiverApproxWeightTF.getText(), receiverPickupNumberTF.getText());
+                        receiverReeferTemperatureTF.getText(), receiverDeliveryAddressTF.getText(), receiverPickupDateTimeTF.getText(),
+                        receiverApproxWeightTF.getText(), receiverPickupNumberTF.getText(), receiverExtraInfoTA.getText());
 
                 // convert inputted number fields to BigDecimals
                 BigDecimal grossDecimal = bigDecimalConversion(grossTF, "gross");
@@ -469,7 +523,6 @@ public class InvoiceCreator extends Pane {
                 String grossDollars = dollarFormatter.format(grossDecimal);
                 String factorCostDollars = dollarFormatter.format(factorCostDecimal);
                 String dispatchCostDollars = dollarFormatter.format(dispatchCostDecimal);
-
 
                 // check for valid values before creating invoice
                 if(invoice.isValidInvoice()) {
@@ -494,9 +547,42 @@ public class InvoiceCreator extends Pane {
                         invoice.setOtbCost("N/A");
                         invoice.setNet(netTF.getText());
                     }
+                }
 
+                // make proper RK Number
+                String newRKNumber = rkNumberTF.getText() + "-" + selectedSuffix;
+
+                // check if RK Number already exists
+                boolean rkNumberFound = false;
+                for(Invoice inv : InvoiceStorage.loadInvoices()) {
+                    if(inv.getRkNumber().equals(newRKNumber)) {
+                        rkNumberFound = true;
+                        break;
+                    }
+                }
+
+                if(rkNumberFound) {
+                    // show duplicate alert
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Duplicate RK Number");
+                    alert.setHeaderText(newRKNumber + " already exists.");
+                    alert.setContentText("Do you want to replace the existing invoice?");
+
+                    ButtonType replaceButton = new ButtonType("Replace");
+                    ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                    alert.getButtonTypes().setAll(replaceButton, cancelButton);
+
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == replaceButton) {
+                            callback.onCloseWindow();
+                        }
+                    });
+                } else {
                     callback.onCloseWindow();
                 }
+
+
+
             }
         });
     }
@@ -534,6 +620,10 @@ public class InvoiceCreator extends Pane {
                     gridPane.add(dispatchedFeeCheckbox, 2, i + 1);
                 } else if(entry.getKey().getText().equals("Extra Broker Information: ")) {
                     gridPane.add(brokerExtraInfoCheckbox, 2, i + 1);
+                } else if(entry.getKey().getText().equals("Extra Shipper Information: ")) {
+                    gridPane.add(shipperExtraInfoCheckbox, 2, i + 1);
+                } else if(entry.getKey().getText().equals("Extra Receiver Information: ")) {
+                    gridPane.add(receiverExtraInfoCheckbox, 2, i + 1);
                 } else {
                     gridPane.add(new Label(""), 2, i + 1);
                 }
@@ -552,6 +642,10 @@ public class InvoiceCreator extends Pane {
                     gridPane.add(dispatchedFeeCheckbox, 2, i + 1);
                 } else if(entry.getKey().getText().equals("Extra Broker Information: ")) {
                     gridPane.add(brokerExtraInfoCheckbox, 2, i + 1);
+                } else if(entry.getKey().getText().equals("Extra Shipper Information: ")) {
+                    gridPane.add(shipperExtraInfoCheckbox, 2, i + 1);
+                } else if(entry.getKey().getText().equals("Extra Receiver Information: ")) {
+                    gridPane.add(receiverExtraInfoCheckbox, 2, i + 1);
                 } else {
                     gridPane.add(new Label(""), 2, i + 1);
                 }
@@ -604,13 +698,13 @@ public class InvoiceCreator extends Pane {
             brokerEmailTF.setText(invoice.getBroker().getEmail());
             brokerNameTF.setText(invoice.getBroker().getBrokerName());
             brokerPONumberTF.setText(invoice.getBroker().getPoNumber());
-
-            // testing
+            // broker extra info
             if(invoice.getBroker().getExtraInfo() != null && !invoice.getBroker().getExtraInfo().equals("")) {
                 brokerExtraInfoCheckbox.setSelected(true);
                 brokerExtraInfoCheckbox.fireEvent(new ActionEvent());
                 brokerExtraInfoTA.setText(invoice.getBroker().getExtraInfo());
             }
+
             shipperDropdown.setValue(invoice.getShipper().getCompanyName());
             shipperAddressTF.setText(invoice.getShipper().getAddress());
             shipperPhoneNumberTF.setText(invoice.getShipper().getPhoneNumber());
@@ -619,6 +713,13 @@ public class InvoiceCreator extends Pane {
             shipperPickupDateTimeTF.setText(invoice.getShipper().getPickupDateTime());
             shipperApproxWeightTF.setText(invoice.getShipper().getApproximateWeight());
             shipperConfirmationNumberTF.setText(invoice.getShipper().getConfirmationNumber());
+            // shipper extra info
+            if(invoice.getShipper().getExtraInfo() != null && !invoice.getShipper().getExtraInfo().equals("")) {
+                shipperExtraInfoCheckbox.setSelected(true);
+                shipperExtraInfoCheckbox.fireEvent(new ActionEvent());
+                shipperExtraInfoTA.setText(invoice.getShipper().getExtraInfo());
+            }
+
             receiverDropdown.setValue(invoice.getReceiver().getCompanyName());
             receiverAddressTF.setText(invoice.getReceiver().getAddress());
             receiverPhoneNumberTF.setText(invoice.getReceiver().getPhoneNumber());
@@ -627,6 +728,13 @@ public class InvoiceCreator extends Pane {
             receiverPickupDateTimeTF.setText(invoice.getReceiver().getPickupDateTime());
             receiverApproxWeightTF.setText(invoice.getReceiver().getApproximateWeight());
             receiverPickupNumberTF.setText(invoice.getReceiver().getPickupNumber());
+            // receiver extra info
+            if(invoice.getReceiver().getExtraInfo() != null && !invoice.getReceiver().getExtraInfo().equals("")) {
+                receiverExtraInfoCheckbox.setSelected(true);
+                receiverExtraInfoCheckbox.fireEvent(new ActionEvent());
+                receiverExtraInfoTA.setText(invoice.getReceiver().getExtraInfo());
+            }
+
             grossTF.setText(DollarConverter.formatFromDollars(invoice.getGross()).toString());
             pickupDateTF.setText(invoice.getPickupDate());
             deliveryDateTF.setText(invoice.getDeliveryDate());
@@ -636,7 +744,10 @@ public class InvoiceCreator extends Pane {
             dispatchedFeeTF.setText(invoice.getDispatchCostPercent());
             dispatchedCostDollarsTF.setText(invoice.getDispatchPay());
             otbCostTF.setText(invoice.getOtbCost());
-            netTF.setText(DollarConverter.formatFromDollars(invoice.getNet()).toString());
+
+            if(!selectedSuffix.equals("D")) {
+                netTF.setText(DollarConverter.formatFromDollars(invoice.getNet()).toString());
+            }
         }
     }
 }

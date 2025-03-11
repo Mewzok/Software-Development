@@ -8,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.util.converter.BigDecimalStringConverter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -231,12 +230,12 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
 
                     // shipper window
                     if (clickedColumn == 3) {
-
+                        inv.getShipper().openShipperWindow();
                     }
 
                     // receiver window
                     if (clickedColumn == 4) {
-
+                        inv.getReceiver().openReceiverWindow();
                     }
                 }
             });
