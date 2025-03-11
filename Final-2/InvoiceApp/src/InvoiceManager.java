@@ -360,7 +360,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         Shipper shipper = newInvoice.getShipper();
         Shipper existingShipper = InvoiceStorage.getShipper(shipper.getCompanyName());
         Receiver receiver = newInvoice.getReceiver();
-        Receiver existingReceiver = InvoiceStorage.getReceiver(shipper.getCompanyName());
+        Receiver existingReceiver = InvoiceStorage.getReceiver(receiver.getCompanyName());
 
          //save broker if new
         if (existingBroker == null || !existingBroker.equals(broker)) {

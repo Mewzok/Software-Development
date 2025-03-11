@@ -18,8 +18,8 @@ public class Receiver extends Transport implements Serializable {
 
     public Receiver(String companyName, String address, String phoneNumber, String reeferTemperature, String deliveryAddress,
                     String pickupDateTime, String approximateWeight, String pickupNumber, String extraInfo) {
-        super(companyName, address, phoneNumber, reeferTemperature, extraInfo, deliveryAddress, pickupDateTime,
-                approximateWeight);
+        super(companyName, address, phoneNumber, reeferTemperature, deliveryAddress, pickupDateTime,
+                approximateWeight, extraInfo);
         this.pickupNumber = pickupNumber;
     }
 
