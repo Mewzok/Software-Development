@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -22,6 +23,8 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     private BigDecimal otbNetAmount = new BigDecimal(0);
     private Label rkNetLabel = new Label();
     private BigDecimal rkNetAmount = new BigDecimal(0);
+
+    private StackPane lastRightClickedCell = null;
 
     private GridPane mainGrid = new GridPane();
     private InvoiceCreator IC = new InvoiceCreator(InvoiceManager.this);
@@ -103,7 +106,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             // create delete confirmation alert
             Alert confirmDeleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmDeleteAlert.setTitle("Delete Invoice");
-            confirmDeleteAlert.setHeaderText("Are you sure you want to delete this invoice?");
+            confirmDeleteAlert.setHeaderText("Are you sure you want to delete " + selectedInvoice.getRkNumber());
             confirmDeleteAlert.setContentText("This action cannot be undone.");
 
             // show alert and wait for user input
@@ -198,8 +201,58 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             // attach event listener for cell editing
             cell.setOnContextMenuRequested(e -> {
                 selectedInvoice = inv; // store selected invoice
+
+                // highlight right clicked cell
+                lastRightClickedCell = cell;
+                cell.setStyle("-fx-border-color: red; -fx-padding: 5; -fx-background-color: lightyellow;");
+
+                // show context menu
                 contextMenu.show(cell, e.getScreenX(), e.getScreenY());
             });
+
+            // remove highlight when context menu is gone
+            contextMenu.setOnHidden(e -> {
+                if(lastRightClickedCell != null) {
+                    lastRightClickedCell.setStyle("-fx-border-color: black; -fx-padding: 5; -fx-background-color: white;");
+                }
+            });
+
+
+            final int clickedColumn = col;
+            // listen for click on clickable cells
+            cell.setOnMouseClicked(e -> {
+                // broker window
+                if(clickedColumn == 2) {
+                    inv.getBroker().openBrokerWindow();
+                }
+
+                // shipper window
+                if(clickedColumn == 3) {
+
+                }
+
+                // receiver window
+                if(clickedColumn == 4) {
+
+                }
+            });
+
+            // add hover effect and cursor for broker, shipper and receiver
+            // if number of items or order is changed, check this is still correct
+            if(col == 2 || col == 3 || col == 4) {
+                cell.setOnMouseEntered(e -> {
+                    // change background color on hover
+                    cell.setStyle("-fx-border-color: black; -fx-padding: 5; -fx-background-color: #f0f0f0;");
+                    // change cursor to hand
+                    cell.setCursor(Cursor.HAND);});
+
+                cell.setOnMouseExited(e -> {
+                    // change background color back
+                    cell.setStyle("-fx-border-color: black; -fx-padding: 5; -fx-background-color: white");
+                    // change cursor back
+                    cell.setCursor(Cursor.DEFAULT);
+                });
+            }
         }
     }
 

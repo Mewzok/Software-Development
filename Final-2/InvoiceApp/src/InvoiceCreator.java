@@ -22,6 +22,7 @@ public class InvoiceCreator extends Pane {
     private final Label brokerAddressLabel = new Label("Broker Address: ");
     private final Label brokerPhoneNumberLabel = new Label("Broker Phone Number: ");
     private final Label brokerReeferTemperatureLabel = new Label("Broker Reefer Temperature: ");
+    private final Label brokerExtraInfoLabel = new Label("Extra Broker Information: ");
     private final Label brokerEmailLabel = new Label("Broker Email: ");
     private final Label brokerNameLabel = new Label("Broker Name: ");
     private final Label brokerPONumberLabel = new Label("Broker PO#: ");
@@ -55,6 +56,7 @@ public class InvoiceCreator extends Pane {
     private TextField brokerAddressTF = new TextField();
     private TextField brokerPhoneNumberTF = new TextField();
     private TextField brokerReeferTemperatureTF = new TextField();
+    private TextArea brokerExtraInfoTA = new TextArea();
     private TextField brokerEmailTF = new TextField();
     private TextField brokerNameTF = new TextField();
     private TextField brokerPONumberTF = new TextField();
@@ -97,6 +99,7 @@ public class InvoiceCreator extends Pane {
     private HBox brokerAddressHBox = new HBox(5, new Label("   "), brokerAddressTF, new Label(""));
     private HBox brokerPhoneNumberHBox = new HBox(5, new Label("   "), brokerPhoneNumberTF, new Label(""));
     private HBox brokerReeferTempHBox = new HBox(5, new Label("   "), brokerReeferTemperatureTF, new Label(""));
+    private HBox brokerExtraInfoHBox = new HBox(5, new Label("   "), brokerExtraInfoTA, new Label(""));
     private HBox brokerEmailHBox = new HBox(5, new Label("   "), brokerEmailTF, new Label(""));
     private HBox brokerNameHBox = new HBox(5, new Label("   "), brokerNameTF, new Label(""));
     private HBox brokerPONumber = new HBox(5, new Label("   "), brokerPONumberTF, new Label(""));
@@ -133,6 +136,13 @@ public class InvoiceCreator extends Pane {
     private CheckBox dispatchedFeeCheckbox = new CheckBox();
     private CheckBox factoredFeeCheckbox = new CheckBox();
 
+    // extra information checkboxes
+    CheckBox brokerExtraInfoCheckbox = new CheckBox();
+    CheckBox shipperExtraInfoCheckbox = new CheckBox("Extra Shipper Information");
+    TextArea shipperExtraInfoTA = new TextArea();
+    CheckBox receiverExtraInfoCheckbox = new CheckBox("Extra Receiver Information");
+    TextArea receiverExtraInfoTA = new TextArea();
+
     private Label rkNetPayLabel = new Label("");
     private Label dispatcherNetPayLabel = new Label("");
 
@@ -167,6 +177,7 @@ public class InvoiceCreator extends Pane {
         formFields.add(new Pair<>(brokerEmailLabel, brokerEmailHBox));
         formFields.add(new Pair<>(brokerNameLabel, brokerNameHBox));
         formFields.add(new Pair<>(brokerPONumberLabel, brokerPONumber));
+        formFields.add(new Pair<>(brokerExtraInfoLabel, brokerExtraInfoHBox));
         formFields.add(new Pair<>(shipperCompanyNameLabel, shipperCompanyNameHBox));
         formFields.add(new Pair<>(shipperAddressLabel, shipperAddressHBox));
         formFields.add(new Pair<>(shipperPhoneNumberLabel, shipperPhoneNumberHBox));
@@ -268,6 +279,13 @@ public class InvoiceCreator extends Pane {
                 factoredFeeTF.setStyle("-fx-background-color: #e0e0e0;"); // gray
             }
         });
+
+        // extra info setups
+        brokerExtraInfoTA.setPromptText("Enter additional information...");
+        brokerExtraInfoTA.setVisible(false);
+
+        // show/hide extra info text area
+        brokerExtraInfoCheckbox.setOnAction(e -> brokerExtraInfoTA.setVisible(brokerExtraInfoCheckbox.isSelected()));
 
         // autofill details when saved field is selected
         // broker autofill
@@ -423,12 +441,13 @@ public class InvoiceCreator extends Pane {
                 invoice.setValidInvoice(true);
                 // create broker shipper and receiver objects from inputted fields
                 Broker broker = new Broker(brokerDropdown.getValue(), brokerAddressTF.getText(), brokerPhoneNumberTF.getText(),
-                        brokerReeferTemperatureTF.getText(), brokerEmailTF.getText(), brokerNameTF.getText(), brokerPONumberTF.getText());
+                        brokerReeferTemperatureTF.getText(), brokerExtraInfoTA.getText(), brokerEmailTF.getText(),
+                        brokerNameTF.getText(), brokerPONumberTF.getText());
                 Shipper shipper = new Shipper(shipperDropdown.getValue(), shipperAddressTF.getText(), shipperPhoneNumberTF.getText(),
-                        shipperReeferTemperatureTF.getText(), shipperDeliveryAddressTF.getText(), shipperPickupDateTimeTF.getText(),
+                        shipperReeferTemperatureTF.getText(), shipperExtraInfoTA.getText(), shipperDeliveryAddressTF.getText(), shipperPickupDateTimeTF.getText(),
                         shipperApproxWeightTF.getText(), shipperConfirmationNumberTF.getText());
                 Receiver receiver = new Receiver(receiverDropdown.getValue(), receiverAddressTF.getText(), receiverPhoneNumberTF.getText(),
-                        receiverReeferTemperatureTF.getText(), receiverDeliveryAddressTF.getText(), receiverPickupDateTimeTF.getText(),
+                        receiverReeferTemperatureTF.getText(), receiverExtraInfoTA.getText(), receiverDeliveryAddressTF.getText(), receiverPickupDateTimeTF.getText(),
                         receiverApproxWeightTF.getText(), receiverPickupNumberTF.getText());
 
                 // convert inputted number fields to BigDecimals
@@ -458,6 +477,8 @@ public class InvoiceCreator extends Pane {
                     invoice.setFactorDueDate(factorDueDateTF.getText());
                     invoice.setDispatchCostPercent(dispatchCostDollars);
                     invoice.setDispatchPay(dispatchedCostDollarsTF.getText());
+
+                    System.out.println(brokerExtraInfoTA.getText());
 
                     if(selectedSuffix == "D") {
                         invoice.setOtbCost(netTF.getText());
@@ -504,6 +525,8 @@ public class InvoiceCreator extends Pane {
                     gridPane.add(factoredFeeCheckbox, 2, i + 1);
                 } else if(entry.getKey().getText().equals("Dispatch Fee: ")) {
                     gridPane.add(dispatchedFeeCheckbox, 2, i + 1);
+                } else if(entry.getKey().getText().equals("Extra Broker Information: ")) {
+                    gridPane.add(brokerExtraInfoCheckbox, 2, i + 1);
                 } else {
                     gridPane.add(new Label(""), 2, i + 1);
                 }
@@ -569,6 +592,7 @@ public class InvoiceCreator extends Pane {
             brokerAddressTF.setText(invoice.getBroker().getAddress());
             brokerPhoneNumberTF.setText(invoice.getBroker().getPhoneNumber());
             brokerReeferTemperatureTF.setText(invoice.getBroker().getReeferTemperature());
+            brokerExtraInfoTA.setText(invoice.getBroker().getExtraInfo());
             brokerEmailTF.setText(invoice.getBroker().getEmail());
             brokerNameTF.setText(invoice.getBroker().getBrokerName());
             brokerPONumberTF.setText(invoice.getBroker().getPoNumber());

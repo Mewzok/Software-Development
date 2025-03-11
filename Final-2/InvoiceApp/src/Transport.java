@@ -7,8 +7,8 @@ public class Transport extends Logistic {
     }
 
     public Transport(String companyName, String address, String phoneNumber, String reeferTemperature,
-            String deliveryAddress, String pickupDateTime, String approximateWeight) {
-        super(companyName, address, phoneNumber, reeferTemperature);
+            String extraInfo, String deliveryAddress, String pickupDateTime, String approximateWeight) {
+        super(companyName, address, phoneNumber, reeferTemperature, extraInfo);
         this.deliveryAddress = deliveryAddress;
         this.pickupDateTime = pickupDateTime;
         this.approximateWeight = approximateWeight;
