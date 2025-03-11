@@ -30,6 +30,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     private GridPane mainGrid = new GridPane();
     private InvoiceCreator IC = new InvoiceCreator(InvoiceManager.this);
     private Stage icStage = new Stage();
+    private LogisticsEditor logEditor = new LogisticsEditor(InvoiceManager.this);
     private ContextMenu contextMenu = new ContextMenu();
     private Invoice selectedInvoice;
     private Stage primaryStage;
@@ -81,6 +82,19 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
                 icStage.setTitle("Invoice Creator");
                 icStage.setScene(new Scene(IC));
                 icStage.show();
+            }
+        });
+
+        editLogisticsButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // close the old window if it's open
+                if(logEditor.isShowing()) {
+                    logEditor.close();
+                }
+
+                // open logistic editor window
+                logEditor = new LogisticsEditor(InvoiceManager.this);
             }
         });
 

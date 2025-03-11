@@ -151,4 +151,16 @@ public class InvoiceStorage {
             return;
         }
     }
+
+    public static void deleteBroker(String broker) {
+        savedBrokers.remove(broker);
+    }
+
+    public static void deleteShipper(String shipper) {
+        savedShippers.remove(shipper);
+    }
+
+    public static void deleteReceiver(String receiver) {
+        savedReceivers.remove(receiver);
+    }
 }
