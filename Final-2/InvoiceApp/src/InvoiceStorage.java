@@ -1,4 +1,5 @@
 import javafx.scene.control.Alert;
+import sun.rmi.runtime.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,15 +56,36 @@ public class InvoiceStorage {
 
     // save a previously used broker
     public static void saveLogistic(Logistic log) {
+        Map<String, ? extends Logistic> logisticsMap = null;
+
         if(log instanceof Broker) {
-            savedBrokers.put(log.getCompanyName(), (Broker)log);
-        } else if(log instanceof Shipper) {
-            savedShippers.put(log.getCompanyName(), (Shipper)log);
+            logisticsMap = savedBrokers;
+        } else if(log instanceof  Shipper) {
+            logisticsMap = savedShippers;
         } else if(log instanceof Receiver) {
-            savedReceivers.put(log.getCompanyName(), (Receiver)log);
+            logisticsMap = savedReceivers;
         }
 
-        saveLogisticsToFile();
+        if (logisticsMap != null) {
+            // find any existing entry
+            String oldName = null;
+            for (Map.Entry<String, ? extends Logistic> entry : logisticsMap.entrySet()) {
+                if(entry.getValue().equals(log)) {
+                    oldName = entry.getKey();
+                    break;
+                }
+            }
+
+            // if name changed remove old entry
+            if(oldName != null && !oldName.equals(log.getCompanyName())) {
+                logisticsMap.remove(oldName);
+            }
+
+            // save new name
+            ((Map<String, Logistic>) logisticsMap).put(log.getCompanyName(), log);
+        }
+
+        saveLogisticsToFile();;
     }
 
     // retrieve broker if already exists

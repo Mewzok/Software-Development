@@ -66,7 +66,7 @@ public class InvoiceCreator extends Pane {
     private TextField shipperPhoneNumberTF = new TextField();
     private TextField shipperReeferTemperatureTF = new TextField();
     private TextField shipperDeliveryAddressTF = new TextField();
-    private TextField shipperPickupDateTimeTF = new TextField("");
+    private TextField shipperPickupDateTimeTF = new TextField();
     private TextField shipperApproxWeightTF = new TextField();
     private TextField shipperConfirmationNumberTF = new TextField();
     private TextArea shipperExtraInfoTA = new TextArea();
