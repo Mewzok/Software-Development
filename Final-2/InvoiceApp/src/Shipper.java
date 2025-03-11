@@ -6,9 +6,9 @@ public class Shipper extends Transport implements Serializable {
     public Shipper() {
     }
 
-    public Shipper(String companyName, String address, String phoneNumber, String reeferTemperature,
+    public Shipper(String companyName, String address, String phoneNumber, String reeferTemperature, String extraInfo,
             String deliveryAddress, String pickupDateTime, String approximateWeight, String confirmationNumber) {
-        super(companyName, address, phoneNumber, reeferTemperature, deliveryAddress, pickupDateTime, approximateWeight);
+        super(companyName, address, phoneNumber, reeferTemperature, extraInfo, deliveryAddress, pickupDateTime, approximateWeight);
         this.confirmationNumber = confirmationNumber;
     }
 
