@@ -1,6 +1,4 @@
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
 
 public class Invoice implements Serializable {
     private String rkNumber;
