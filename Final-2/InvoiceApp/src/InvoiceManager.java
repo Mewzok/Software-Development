@@ -199,7 +199,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
                 inv.getGross(),
                 inv.getPickupDate(),
                 inv.getDeliveryDate(),
-                inv.getFactorCost(),
+                inv.getFactorCostPay(),
                 inv.getFactorDate(),
                 inv.getFactorDueDate(),
                 inv.getDispatchPay(),

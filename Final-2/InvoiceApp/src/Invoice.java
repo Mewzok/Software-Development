@@ -9,7 +9,8 @@ public class Invoice implements Serializable {
     private String gross;
     private String pickupDate;
     private String deliveryDate;
-    private String factorCost;
+    private String factorCostPercent;
+    private String factorCostPay;
     private String factorDate;
     private String factorDueDate;
     private String dispatchCostPercent;
@@ -27,7 +28,8 @@ public class Invoice implements Serializable {
         this.gross = "0";
         this.pickupDate = "";
         this.deliveryDate = "";
-        this.factorCost = "0";
+        this.factorCostPercent = "0";
+        this.factorCostPay = "0";
         this.factorDate = "";
         this.factorDueDate = "";
         this.dispatchCostPercent = "0";
@@ -39,8 +41,8 @@ public class Invoice implements Serializable {
 
     // all arg constructor
     public Invoice(String rkNumber, String otbNumber, Broker broker, Shipper shipper, Receiver receiver,
-            String gross, String pickupDate, String deliveryDate, String factorCost, String factorDate,
-            String factorDueDate, String dispatchCostPercent, String dispatchPay,
+            String gross, String pickupDate, String deliveryDate, String factorCostPercent, String factorCostPay,
+                   String factorDate, String factorDueDate, String dispatchCostPercent, String dispatchPay,
             String otbCost, String net) {
         this.rkNumber = rkNumber;
         this.otbNumber = otbNumber;
@@ -50,7 +52,8 @@ public class Invoice implements Serializable {
         this.gross = gross;
         this.pickupDate = pickupDate;
         this.deliveryDate = deliveryDate;
-        this.factorCost = factorCost;
+        this.factorCostPercent = factorCostPercent;
+        this.factorCostPay = factorCostPay;
         this.factorDate = factorDate;
         this.factorDueDate = factorDueDate;
         this.dispatchCostPercent = dispatchCostPercent;
@@ -93,8 +96,12 @@ public class Invoice implements Serializable {
         return deliveryDate;
     }
 
-    public String getFactorCost() {
-        return factorCost;
+    public String getFactorCostPercent() {
+        return factorCostPercent;
+    }
+
+    public String getFactorCostPay() {
+        return factorCostPay;
     }
 
     public String getFactorDate() {
@@ -156,8 +163,12 @@ public class Invoice implements Serializable {
         this.deliveryDate = deliveryDate;
     }
 
-    public void setFactorCost(String factorCost) {
-        this.factorCost = factorCost;
+    public void setFactorCostPercent(String factorCostPercent) {
+        this.factorCostPercent = factorCostPercent;
+    }
+
+    public void setFactorCostPay(String factorCostPay) {
+        this.factorCostPay = factorCostPay;
     }
 
     public void setFactorDate(String factorDate) {

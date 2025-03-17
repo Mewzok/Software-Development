@@ -91,6 +91,8 @@ public class InvoiceCreator extends Pane {
     private TextField otbCostTF = new TextField();
     private TextField netTF = new TextField();
 
+    private String factorCostPay;
+
     // comboboxes
     private ComboBox<String> brokerDropdown = new ComboBox<>();
     private ComboBox<String> shipperDropdown = new ComboBox<>();
@@ -476,10 +478,12 @@ public class InvoiceCreator extends Pane {
             sum = sum.add(lumperFee); // second add lumper fee
             BigDecimal dispatcherNetProfit = sum.multiply(dispatchedFee.divide(new BigDecimal(100))); // get dispatcher profit
             sum = sum.subtract(dispatcherNetProfit); // third subtract dispatch fee
-            BigDecimal netProfit = sum.subtract(sum.multiply(factoredFee.divide(new BigDecimal(100)))); // fourth subtract factor fee
+            BigDecimal factorNetProfit = sum.multiply(factoredFee.divide(new BigDecimal(100)));
+            BigDecimal netProfit = sum.subtract(factorNetProfit); // fourth subtract factor fee
 
             // convert to US dollars
             String netFormatted = DollarConverter.formatToDollars(netProfit);
+            String factorFormatted = DollarConverter.formatToDollars(factorNetProfit);
             String dispatchedFormatted = DollarConverter.formatToDollars(dispatcherNetProfit);
 
             if(selectedSuffix == "D") {
@@ -489,6 +493,7 @@ public class InvoiceCreator extends Pane {
                 rkNetPayLabel.setText("Net Profit: " + netFormatted);
             }
             netTF.setText(netFormatted);
+            factorCostPay = factorFormatted;
             dispatcherNetPayLabel.setText("Dispatcher cost: " + dispatchedFormatted);
             dispatchedCostDollarsTF.setText(dispatchedFormatted);
 
@@ -534,7 +539,8 @@ public class InvoiceCreator extends Pane {
                     invoice.setGross(grossDollars);
                     invoice.setPickupDate(pickupDateTF.getText());
                     invoice.setDeliveryDate(deliveryDateTF.getText());
-                    invoice.setFactorCost(factorCostDollars);
+                    invoice.setFactorCostPercent(factorCostDollars);
+                    invoice.setFactorCostPay(factorCostPay);
                     invoice.setFactorDate(factorDateTF.getText());
                     invoice.setFactorDueDate(factorDueDateTF.getText());
                     invoice.setDispatchCostPercent(dispatchCostDollars);
@@ -738,7 +744,7 @@ public class InvoiceCreator extends Pane {
             grossTF.setText(DollarConverter.formatFromDollars(invoice.getGross()).toString());
             pickupDateTF.setText(invoice.getPickupDate());
             deliveryDateTF.setText(invoice.getDeliveryDate());
-            factoredFeeTF.setText(DollarConverter.formatFromDollars(invoice.getFactorCost()).toString());
+            factoredFeeTF.setText(DollarConverter.formatFromDollars(invoice.getFactorCostPercent()).toString());
             factorDateTF.setText(invoice.getFactorDate());
             factorDueDateTF.setText(invoice.getFactorDueDate());
             dispatchedFeeTF.setText(invoice.getDispatchCostPercent());
