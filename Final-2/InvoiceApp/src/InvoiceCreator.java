@@ -9,6 +9,7 @@ import javafx.util.Pair;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.time.YearMonth;
 import java.util.*;
 
 public class InvoiceCreator extends Pane {
@@ -92,6 +93,8 @@ public class InvoiceCreator extends Pane {
     private TextField netTF = new TextField();
 
     private String factorCostPay;
+
+    private YearMonth ym;
 
     // comboboxes
     private ComboBox<String> brokerDropdown = new ComboBox<>();
@@ -560,7 +563,7 @@ public class InvoiceCreator extends Pane {
 
                 // check if RK Number already exists
                 boolean rkNumberFound = false;
-                for(Invoice inv : InvoiceStorage.loadInvoices()) {
+                for(Invoice inv : InvoiceStorage.loadInvoices(ym)) {
                     if(inv.getRkNumber().equals(newRKNumber)) {
                         rkNumberFound = true;
                         break;
