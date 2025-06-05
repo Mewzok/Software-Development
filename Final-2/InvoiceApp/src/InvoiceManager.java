@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -10,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -35,6 +37,8 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
     private Invoice selectedInvoice;
     private Stage primaryStage;
 
+    private YearMonth currentMonth = YearMonth.now();
+
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -49,6 +53,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         // create scroll bar
         ScrollPane scrollPane = new ScrollPane(mainGrid);
         mainBorderPane.setCenter(scrollPane);
+        scrollPane.setFitToWidth(true);
 
         // create context menu
         MenuItem editItem = new MenuItem("Edit");
@@ -58,7 +63,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         // place headers in first row, also determine size of each column
         placeHeadersInRow();
 
-        invoices = InvoiceStorage.loadInvoices();
+        invoices = InvoiceStorage.loadInvoices(currentMonth);
         InvoiceStorage.loadLogisticsFromFile(); // place logistics data in internal map
 
         loadInvoicesToGrid();
@@ -136,7 +141,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
                         invoices.remove(i);
 
                         // reset ui
-                        InvoiceStorage.saveInvoices(invoices);
+                        InvoiceStorage.saveInvoices(invoices, currentMonth);
                         loadInvoicesToGrid();
 
                         break;
@@ -162,6 +167,17 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         primaryStage.setHeight(700);
         primaryStage.show();
 
+        Platform.runLater(() -> {
+            mainGrid.applyCss();
+            mainGrid.layout();
+
+            double minWidth = primaryStage.getWidth();
+
+            System.out.println(minWidth);
+
+            primaryStage.setMinWidth(minWidth);
+        });
+
         refreshSize();
     }
 
@@ -184,7 +200,10 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setHgrow(Priority.ALWAYS);
             columnConstraints.setMaxWidth(Double.MAX_VALUE);
-            mainGrid.getColumnConstraints().add(columnConstraints);
+            columnConstraints.setMinWidth(Region.USE_COMPUTED_SIZE);
+            if(mainGrid.getColumnConstraints().size() <= col) {
+                mainGrid.getColumnConstraints().add(columnConstraints);
+            }
         }
     }
 
@@ -391,7 +410,7 @@ public class InvoiceManager extends Application implements WindowCloseCallback {
         }
 
         // save new or updated invoice
-        InvoiceStorage.saveInvoices(invoices);
+        InvoiceStorage.saveInvoices(invoices, currentMonth);
         icStage.close();
 
         // refresh grid
