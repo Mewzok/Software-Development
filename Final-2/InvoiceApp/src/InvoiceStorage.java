@@ -6,18 +6,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.YearMonth;
 import java.util.*;
 
 public class InvoiceStorage {
-    private static final String FILE_PATH = "invoices.dat";
     private static final String LOGISTIC_FILE_PATH = "savedlogistics.dat";
     private static final Map<String, Broker> savedBrokers = new HashMap<>();
     private static final Map<String, Shipper> savedShippers = new HashMap<>();
     private static final Map<String, Receiver> savedReceivers = new HashMap<>();
 
     // save invoices to file
-    public static void saveInvoices(ArrayList<Invoice> invoices) {
-        try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+    public static void saveInvoices(ArrayList<Invoice> invoices, YearMonth ym) {
+        String filename = "invoices_" + ym.getYear() + "_" + String.format("%02d", ym.getMonthValue()) + ".dat";
+
+        try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename))) {
             output.writeObject(invoices);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -32,12 +34,13 @@ public class InvoiceStorage {
     }
 
     // load invoices from file
-    public static ArrayList<Invoice> loadInvoices() {
-        File file = new File(FILE_PATH);
+    public static ArrayList<Invoice> loadInvoices(YearMonth ym) {
+        String filename = "invoices_" + ym.getYear() + "_" + String.format("%02d", ym.getMonth()) + ".dat";
+        File file = new File(filename);
         if (!file.exists())
             return new ArrayList<Invoice>();
 
-        try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+        try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(filename))) {
             return (ArrayList<Invoice>) input.readObject();
         } catch (IOException | ClassNotFoundException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
